@@ -1036,6 +1036,18 @@ function updateWelcomeOverlay() {
         render();
       }
     });
+	
+	window.addEventListener('click', () => {
+  if (layerPanelOpen) {
+    layerPanelOpen = false;
+    updateLayerPanelVisibility();
+  }
+
+  if (helpPanelOpen) {
+    helpPanelOpen = false;
+    updateHelpPanelVisibility();
+  }
+});
 
     function getTouchDist(t1, t2) {
       const dx = t2.clientX - t1.clientX;
