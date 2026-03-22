@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modular History Timeline</title>
+  <style>
+    :root {
+      --bg: #0a0a0d;
+      --text: #f3f4f6;
+      --muted: rgba(255,255,255,0.62);
+      --line: rgba(255,255,255,0.92);
+      --thin: rgba(255,255,255,0.14);
+      --panel: rgba(255,255,255,0.055);
+      --panel-border: rgba(255,255,255,0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    #app {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(to left, rgba(255,255,255,0.05), transparent 90%), #111111;
+    }
+
+    #stage {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      cursor: grab;
+    }
+
+    #stage.dragging { cursor: grabbing; }
+
+    #timelineLayer {
+      position: absolute;
+      inset: 0;
+    }
+
+    .axis {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 1px;
+      background: var(--line);
+      transform: translateY(-0.5px);
+      box-shadow: 0 0 12px rgba(255,255,255,0.08);
+    }
+
+    .tick {
+      position: absolute;
+      width: 1px;
+      background: var(--thin);
+      top: calc(50% - 10px);
+      height: 20px;
+    }
+
+    .tick.major {
+      background: rgba(255,255,255,0.28);
+      top: calc(50% - 10px);
+      height: 22px;
+    }
+
+    .tick-label {
+      position: absolute;
+      transform: translateX(-50%);
+      top: calc(50% + 18px);
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+
+    .era-band {
+  position: absolute;
+  height: 30px;
+  border: none;
+  border-radius: 0;
+  overflow: hidden;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+
+  /* only horizontal edges, no left/right box effect */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(255,255,255,0.18);
+}
+
+
+
+.era-band.active {
+  filter: brightness(1.5);
+  border: 1.5px solid #ffffff;
+  border-radius: 0px;
+  z-index:1000;
+}
+.era-band:hover {
+  
+  filter: brightness(1.5);
+  border: 1.5px solid #ffffff;
+  border-radius: 0px;
+  z-index:1000;
+
+}
+
+    .era-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.86);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.02em;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .fact {
+      position: absolute;
+      width: 210px;
+	  min-width:;
+      transform: translateX(-50%);
+      pointer-events: none;
+	  z-index:10;
+    }
+
+    .fact-line {
+      position: absolute;
+      left: 50%;
+      width: 0.5px;
+      transform: translateX(-50%);
+      background: rgba(255,100,100,0.66);
+      bottom: 100%;
+      height: 32px;
+    }
+
+    .fact-card {
+      padding: 2px 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(3px);
+	  
+    }
+
+    .fact.level0 .fact-card {
+      border-color: rgba(255,255,255,0.12);
+      
+    }
+
+    .fact-year {
+      font-size: 12px;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 2px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .fact-text {
+      font-size: 12px;
+      line-height: 1.35;
+      color: rgba(255,255,255,0.72);
+    }
+
+  #layerToggle {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  padding: 10px 14px;
+  background: rgba(12,12,16,0.88);
+  border: 1px solid var(--panel-border);
+  border-radius: 2px;
+  color: rgba(255,255,255,0.9);
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+}
+
+#layerToggle:hover {
+  background: rgba(20,20,28,0.92);
+}
+
+#layerPanel {
+  position: absolute;
+  left: 14px;
+  bottom: 58px; /* sits above the button */
+  min-width: 150px;
+  max-width: 280px;
+  max-height: 48vh;
+  overflow: auto;
+  padding: 4px 6px;
+  background: rgba(200,200,200,0.8);
+  border: 1px solid var(--panel-border);
+  border-radius: 2px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.36);
+  backdrop-filter: blur(10px);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: auto;
+  z-index: 19;
+}
+
+#layerPanel.hidden {
+  display: none;
+}
+
+    .layer-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      
+    }
+
+    .layer-item + .layer-item { margin-top: 6px; }
+
+    .layer-item label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: rgba(0,0,0,0.9);
+      cursor: pointer;
+    }
+
+    .layer-item input[type="checkbox"] {
+      margin: 0;
+      accent-color: #cbd5e1;
+    }
+
+    .layer-hint {
+      margin-top: 10px;
+      font-size: 11px;
+      line-height: 1.35;
+      color: rgba(255,255,255,0.5);
+    }
+
+
+#eraInfoBox {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(760px, calc(100vw - 32px));
+  padding: 14px 18px;
+  
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+
+  text-align: center;
+  z-index: 10;
+  pointer-events: auto; /* was none */
+  opacity: 0;
+  transition: opacity 0.16s ease;
+}
+
+#eraInfoBox.visible {
+  opacity: 1;
+}
+
+#eraInfoClose {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,1);
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#eraInfoClose:hover {
+  
+  color: rgba(0,0,0,1);
+}
+
+#eraInfoClose:active {
+  transform: translateY(1px);
+}
+
+#eraInfoTitle {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: rgba(255,255,255,1);
+  margin-bottom: 6px;
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.9),
+     0px -0px 0 rgba(0,0,0,0.9),
+    -1px  1px 0 rgba(0,0,0,0.9),
+     1px  1px 0 rgba(0,0,0,0.9);
+}
+
+    #eraInfoText {
+      font-size: 14px;
+      line-height: 1.45;
+	  text-align: left;
+	  
+      color: rgba(255,255,255,1);
+	 
+	  letter-spacing: 0.02em;
+	  
+
+    }
+
+    @media (max-width: 700px) {
+      #layerPanel {
+        min-width: 210px;
+        max-width: calc(100vw - 28px);
+      }
+    }
+	
+	
+	
+	#helpToggle {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  background: rgba(12,12,16,0.88);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  color: rgba(255,255,255,0.92);
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+}
+
+#helpToggle:hover {
+  background: rgba(20,20,28,0.92);
+}
+
+#helpPanel {
+  position: absolute;
+  right: 14px;
+  bottom: 64px; /* sits above the ? button */
+  width: min(260px, calc(100vw - 28px));
+  
+  overflow: auto;
+  padding: 12px 14px;
+  background: rgba(200,200,200,0.88);
+  border: 1px solid var(--panel-border);
+  border-radius: 2px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.36);
+  backdrop-filter: blur(10px);
+  color: rgba(255,255,255,0.88);
+  z-index: 19;
+}
+
+#helpPanel.hidden {
+  display: none;
+}
+
+.help-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(0,0,0,0.82);
+  margin-bottom: 10px;
+}
+
+.help-text {
+  font-size: 12px;
+  line-height: 1.2;
+  color: rgba(0,0,0,0.82);
+}
+
+.help-text p {
+  margin: 0 0 10px 0;
+}
+
+.help-text p:last-child {
+  margin-bottom: 0;
+}
+
+#welcomeOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+  gap: 10px;
+  z-index: 8;
+  pointer-events: none;
+  text-align: center;
+  padding: 24px;
+}
+
+#welcomeOverlay.hidden {
+  display: none;
+}
+
+#welcomeTitle {
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.96);
+  text-shadow:
+    0 0 18px rgba(255,255,255,0.10),
+    0 2px 10px rgba(0,0,0,0.55);
+}
+
+#welcomeText {
+  font-size: clamp(10px, 1vw, 12px);
+  color: rgba(255,255,255,0.72);
+  letter-spacing: 0.04em;
+
+}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="eraInfoBox" aria-live="polite">
+	  <button id="eraInfoClose" type="button" aria-label="Close era info">×</button>
+	  <div id="eraInfoTitle"></div>
+	  <div id="eraInfoText"></div>
+	</div>
+    <div id="stage"><div id="timelineLayer"></div></div>
+	<button id="layerToggle" type="button">Visa lagermeny</button>
+	
+    <div id="layerPanel">
+      <div class="layer-title"></div>
+      <div id="layerList"></div>
+    
+    </div>
+	
+	<button id="helpToggle" type="button" aria-label="Show instructions">?</button>
+
+		<div id="helpPanel" class="hidden" aria-live="polite">
+		  <div class="help-title">Instruktioner</div>
+		  <div class="help-text">
+		  <p>Använd <b>lagermenyn</b> i nerdersta vänstra hörnet för att aktivera andra lager.</p>
+		  <p>Om man <b>klickar på en era</b> kan mer fakta dyka upp.</p>
+			<p><b>Dra med musen</b> åt höger eller vänster för att flytta linjen.</p>
+			<p>Använd två fingrar eller mushjulet för att zooma in och ut.</p>
+			<p>Det går också att styra med <b>piltangenterna</b>. Höger/vänster för att flytta. Upp/ned för att zooma.</p>
+			
+			
+		  </div>
+		</div>
+	
+	
+	<div id="welcomeOverlay">
+  <div id="welcomeTitle">Välkommen till Tiden</div>
+  <div id="welcomeText">
+  <p>Klicka på <b>Visa lagermeny</b> för att välja tema.</p>
+  <p>Klicka på <b>?</b> för instruktioner.</p>
+  </div>
+</div>
+	
+  </div>
+  
+  
+  
+
+  <script>
+    window.TimelineRegistry = {
+      datasets: [],
+      registerDataset(dataset) {
+        this.datasets.push(dataset);
+      }
+    };
+  </script>
+  <script src="./data-se/datasets.js"></script>
+  <script>
+    const START_YEAR = -13_800_000_000;
+const END_YEAR = 2026;
+
+    const stage = document.getElementById('stage');
+    const layer = document.getElementById('timelineLayer');
+    const layerList = document.getElementById('layerList');
+    const eraInfoBox = document.getElementById('eraInfoBox');
+    const eraInfoTitle = document.getElementById('eraInfoTitle');
+    const eraInfoText = document.getElementById('eraInfoText');
+	const eraInfoClose = document.getElementById('eraInfoClose');
+	const welcomeOverlay = document.getElementById('welcomeOverlay');
+	const layerPanel = document.getElementById('layerPanel');
+const layerToggle = document.getElementById('layerToggle');
+
+const helpToggle = document.getElementById('helpToggle');
+const helpPanel = document.getElementById('helpPanel');
+
+let layerPanelOpen = false;
+
+
+let helpPanelOpen = false;
+
+function updateHelpPanelVisibility() {
+  helpPanel.classList.toggle('hidden', !helpPanelOpen);
+}
+
+helpToggle.addEventListener('click', event => {
+  event.stopPropagation();
+  helpPanelOpen = !helpPanelOpen;
+  updateHelpPanelVisibility();
+});
+
+helpPanel.addEventListener('click', event => {
+  event.stopPropagation();
+});
+
+function updateLayerPanelVisibility() {
+  layerPanel.classList.toggle('hidden', !layerPanelOpen);
+  layerToggle.textContent = layerPanelOpen ? 'Göm lagermeny' : 'Visa lagermeny';
+}
+
+layerToggle.addEventListener('click', event => {
+  event.stopPropagation();
+  layerPanelOpen = !layerPanelOpen;
+  updateLayerPanelVisibility();
+});
+
+layerPanel.addEventListener('click', event => {
+  event.stopPropagation();
+});
+
+
+	
+	eraInfoClose.addEventListener('click', event => {
+	  event.stopPropagation();
+	  activeEraId = null;
+	  activeEra = null;
+	  render();
+	});
+	
+	eraInfoBox.addEventListener('click', event => {
+  event.stopPropagation();
+});
+
+let centerYear = 1200;
+let pxPerYear = window.innerWidth / (2000 - 400);
+const MIN_PX_PER_YEAR = 0.00000005;
+const MAX_PX_PER_YEAR = 22000;
+
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartCenterYear = centerYear;
+
+    let pinchStartDist = 0;
+    let pinchStartPxPerYear = pxPerYear;
+    let pinchAnchorYear = centerYear;
+
+    let activeEraId = null;
+    let activeEra = null;
+    let loaded = false;
+
+
+let hoveredEra = null;
+
+const ERA_COLOR_POOL = [
+  { bg: 'rgba(255, 99, 99, 0.58)', border: 'rgba(255, 140, 140, 0.88)' },
+  { bg: 'rgba(255, 140, 66, 0.58)', border: 'rgba(255, 175, 110, 0.88)' },
+  { bg: 'rgba(255, 184, 61, 0.58)', border: 'rgba(255, 210, 120, 0.88)' },
+  { bg: 'rgba(255, 220, 64, 0.56)', border: 'rgba(255, 235, 130, 0.84)' },
+  { bg: 'rgba(170, 230, 60, 0.56)', border: 'rgba(200, 245, 120, 0.84)' },
+  { bg: 'rgba(60, 220, 110, 0.56)', border: 'rgba(120, 245, 160, 0.84)' },
+  { bg: 'rgba(28, 220, 160, 0.56)', border: 'rgba(110, 245, 190, 0.84)' },
+  { bg: 'rgba(35, 220, 205, 0.56)', border: 'rgba(120, 245, 230, 0.84)' },
+  { bg: 'rgba(35, 210, 245, 0.56)', border: 'rgba(120, 230, 255, 0.84)' },
+  { bg: 'rgba(80, 155, 255, 0.58)', border: 'rgba(145, 190, 255, 0.88)' },
+  { bg: 'rgba(115, 115, 255, 0.58)', border: 'rgba(170, 170, 255, 0.88)' },
+  { bg: 'rgba(155, 110, 255, 0.58)', border: 'rgba(195, 165, 255, 0.88)' },
+  { bg: 'rgba(190, 100, 255, 0.58)', border: 'rgba(220, 160, 255, 0.88)' },
+  { bg: 'rgba(235, 90, 255, 0.56)', border: 'rgba(245, 155, 255, 0.84)' },
+  { bg: 'rgba(255, 95, 175, 0.58)', border: 'rgba(255, 160, 210, 0.88)' }
+];
+
+    function clamp(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+
+    function mulberry32(a) {
+      return function() {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+
+    function hashString(str) {
+      let h = 1779033703 ^ str.length;
+      for (let i = 0; i < str.length; i++) {
+        h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+        h = (h << 13) | (h >>> 19);
+      }
+      return h >>> 0;
+    }
+
+    function assignEraColors(items, namespace) {
+      const rng = mulberry32(hashString(namespace));
+      const recent = [];
+      return items.map(item => {
+        const candidates = ERA_COLOR_POOL.map((color, idx) => ({ color, idx }));
+        candidates.sort(() => rng() - 0.5);
+        let chosen = candidates.find(candidate => !recent.includes(candidate.idx));
+        if (!chosen) chosen = candidates[0];
+        recent.push(chosen.idx);
+        if (recent.length > 2) recent.shift();
+        return { ...item, color: chosen.color };
+      });
+    }
+
+    function yearToX(year) {
+      return window.innerWidth / 2 + (year - centerYear) * pxPerYear;
+    }
+
+    function xToYear(x) {
+      return centerYear + (x - window.innerWidth / 2) / pxPerYear;
+    }
+
+    function formatYear(year) {
+  const abs = Math.abs(year);
+  const sign = year < 0 ? '-' : '';
+
+  function compact(value, suffix) {
+    const rounded =
+      value >= 100 ? Math.round(value) :
+      value >= 10 ? Number(value.toFixed(1)) :
+      Number(value.toFixed(2));
+    return `${sign}${rounded}${suffix}`;
+  }
+
+  if (abs >= 1_000_000_000) return compact(abs / 1_000_000_000, 'B');
+  if (abs >= 1_000_000) return compact(abs / 1_000_000, 'M');
+
+  if (Math.abs(year - Math.round(year)) < 1e-9) {
+    return `${Math.round(year)}`;
+  }
+
+  return `${Number(year.toFixed(2))}`;
+}
+
+    function getTickStep() {
+  const targetPx = 90;
+  const rawYears = targetPx / pxPerYear;
+
+  if (rawYears <= 0) return 1;
+
+  const exponent = Math.floor(Math.log10(rawYears));
+  const base = Math.pow(10, exponent);
+  const scaled = rawYears / base;
+
+  if (scaled <= 1) return 1 * base;
+  if (scaled <= 2) return 2 * base;
+  if (scaled <= 5) return 5 * base;
+  return 10 * base;
+}
+
+    function visibleFactLevel() {
+      if (pxPerYear < 2.5) return 0;
+      if (pxPerYear < 14) return 1;
+      return 2;
+    }
+
+    function normalizeDatasets(rawDatasets) {
+      return rawDatasets.map((dataset, index) => {
+        const enabled = dataset.enabledByDefault !== false;
+        return {
+          ...dataset,
+          id: dataset.id || `dataset-${index}`,
+          enabled,
+          eras: assignEraColors((dataset.eras || []).map((era, eraIndex) => ({
+            order: era.order ?? 0,
+            rowHeight: era.rowHeight ?? 30,
+            labelMinWidth: era.labelMinWidth ?? 62,
+            revealZoom: era.revealZoom ?? 0,
+            id: era.id || `${dataset.id || `dataset-${index}`}-era-${eraIndex}`,
+            datasetId: dataset.id || `dataset-${index}`,
+            ...era
+          })), dataset.id || `dataset-${index}`),
+          facts: (dataset.facts || []).map((fact, factIndex) => ({
+            id: fact.id || `${dataset.id || `dataset-${index}`}-fact-${factIndex}`,
+            datasetId: dataset.id || `dataset-${index}`,
+            level: fact.level ?? 0,
+            year: fact.year,
+            ...fact
+          }))
+        };
+      });
+    }
+
+    function buildLayerPanel() {
+      layerList.innerHTML = '';
+      datasets.forEach(dataset => {
+        const row = document.createElement('div');
+        row.className = 'layer-item';
+        const inputId = `layer-${dataset.id}`;
+        row.innerHTML = `
+          <label for="${inputId}">
+            <input id="${inputId}" type="checkbox" ${dataset.enabled ? 'checked' : ''} />
+            <span>${dataset.label}</span>
+          </label>
+        `;
+        const checkbox = row.querySelector('input');
+        checkbox.addEventListener('change', () => {
+          dataset.enabled = checkbox.checked;
+          if (activeEraId) {
+            const allEras = datasets.flatMap(d => d.enabled ? d.eras : []);
+            if (!allEras.some(era => era.id === activeEraId)) {
+              activeEraId = null;
+              activeEra = null;
+            } else {
+              activeEra = allEras.find(era => era.id === activeEraId) || null;
+            }
+          }
+          render();
+        });
+        layerList.appendChild(row);
+      });
+    }
+
+function getPreviewEra() {
+  return hoveredEra || activeEra;
+}
+
+  function updateEraInfo() {
+  const previewEra = getPreviewEra();
+
+  if (!previewEra) {
+    eraInfoTitle.textContent = '';
+    eraInfoText.textContent = '';
+    eraInfoBox.classList.remove('visible');
+    eraInfoBox.style.background = '';
+    eraInfoBox.style.borderColor = '';
+    return;
+  }
+
+  eraInfoTitle.textContent = previewEra.title || '';
+  eraInfoText.textContent = previewEra.info || '';
+
+  if (previewEra.color) {
+    eraInfoBox.style.background = previewEra.color.bg;
+  }
+
+  eraInfoBox.classList.add('visible');
+}
+
+    function clearLayer() {
+      while (layer.firstChild) layer.removeChild(layer.firstChild);
+    }
+
+    function addAxis() {
+      const axis = document.createElement('div');
+      axis.className = 'axis';
+      layer.appendChild(axis);
+    }
+
+    function addTicks() {
+      const step = getTickStep();
+      const leftYear = xToYear(0);
+      const rightYear = xToYear(window.innerWidth);
+      const first = Math.floor(leftYear / step) * step;
+
+      for (let y = first; y <= rightYear + step; y += step) {
+        const x = yearToX(y);
+        const isMajor = step <= 500 || step >= 1000 || Number.isInteger(y / (step * 5));
+        const tick = document.createElement('div');
+        tick.className = `tick${isMajor ? ' major' : ''}`;
+        tick.style.left = `${x}px`;
+        layer.appendChild(tick);
+
+        if (isMajor && y >= -13_800_000_000 && y <= 2200) {
+		  const label = document.createElement('div');
+		  label.className = 'tick-label';
+		  label.style.left = `${x}px`;
+		  label.textContent = formatYear(y);
+		  layer.appendChild(label);
+		}
+      }
+    }
+
+    function getEnabledDatasets() {
+      return datasets.filter(dataset => dataset.enabled);
+    }
+
+    function getEnabledEras() {
+      return getEnabledDatasets()
+        .flatMap(dataset => dataset.eras)
+        .filter(era => pxPerYear >= (era.revealZoom || 0));
+    }
+
+    function addEras() {
+      const enabled = getEnabledDatasets();
+      const ordered = enabled.map((dataset, datasetIndex) => ({
+        dataset,
+        datasetIndex,
+        eras: dataset.eras.filter(era => pxPerYear >= (era.revealZoom || 0))
+						
+      }));
+
+      const majorDatasetId = 'major';
+      const layerDatasets = [
+        ...ordered.filter(item => item.dataset.id === majorDatasetId),
+        ...ordered.filter(item => item.dataset.id !== majorDatasetId)
+      ];
+
+      const baseTop = window.innerHeight / 2 - 50;
+      const rowGap = 10;
+      const rowMap = new Map();
+      let nextRow = 0;
+
+      layerDatasets.forEach(item => {
+        item.eras
+          .sort((a, b) => (a.order - b.order) || (a.start - b.start))
+          .forEach(era => {
+            const rowKey = `${item.dataset.id}:${era.order || 0}`;
+            if (!rowMap.has(rowKey)) {
+              rowMap.set(rowKey, nextRow++);
+            }
+            const visualRow = rowMap.get(rowKey);
+            const rawX1 = yearToX(era.start);
+            const rawX2 = yearToX(era.end);
+            if (rawX2 < 0 || rawX1 > window.innerWidth) return;
+
+            const x1 = Math.max(0, rawX1);
+            const x2 = Math.min(window.innerWidth, rawX2);
+            const width = x2 - x1;
+            if (width < 2) return;
+
+            const band = document.createElement('button');
+            band.type = 'button';
+            band.className = `era-band${activeEraId === era.id ? ' active' : ''}`;
+            band.style.left = `${x1}px`;
+            band.style.width = `${width}px`;
+            band.style.top = `${baseTop - visualRow * (era.rowHeight + rowGap)}px`;
+            band.style.height = `${era.rowHeight}px`;
+            band.style.background = era.color.bg;
+            band.style.borderColor = era.color.border;
+            band.style.opacity = `${era.opacity ?? 1}`;
+            band.dataset.eraId = era.id;
+            band.title = era.title;
+
+            band.addEventListener('click', event => {
+			  event.stopPropagation();
+			  const willActivate = activeEraId !== era.id;
+			  activeEraId = willActivate ? era.id : null;
+			  activeEra = willActivate ? era : null;
+			  if (willActivate) centerOnRange(era.start, era.end);
+			  render();
+			});
+
+            if (width > (era.labelMinWidth || 62)) {
+              const label = document.createElement('div');
+              label.className = 'era-label';
+              label.textContent = era.title;
+              band.appendChild(label);
+            }
+
+band.addEventListener('mouseenter', () => {
+  hoveredEra = era;
+  updateEraInfo();
+});
+
+band.addEventListener('mouseleave', () => {
+  if (hoveredEra && hoveredEra.id === era.id) {
+    hoveredEra = null;
+    updateEraInfo();
+  }
+});
+
+            layer.appendChild(band);
+          });
+      });
+    }
+
+    function factBelongsToActiveEra(fact) {
+      if (!activeEra) return false;
+      return fact.year >= activeEra.start && fact.year <= activeEra.end;
+    }
+
+    function getVisibleFacts() {
+      const maxZoomLevel = visibleFactLevel();
+      return getEnabledDatasets()
+        .flatMap(dataset => dataset.facts)
+        .filter(fact => {
+          if (fact.level === 0) return true;
+          if (!activeEra) return false;
+          return factBelongsToActiveEra(fact) && fact.level <= maxZoomLevel;
+        });
+    }
+
+    function addFacts() {
+      const shown = getVisibleFacts().sort((a, b) => a.year - b.year);
+      const lanesBelow = [64, 120, 176, 232, 288, 344];
+      const laneEnds = Array(lanesBelow.length).fill(-Infinity);
+
+      shown.forEach(fact => {
+        const x = yearToX(fact.year);
+        if (x < -260 || x > window.innerWidth + 260) return;
+
+        let chosenLane = 0;
+        for (let lane = 0; lane < lanesBelow.length; lane++) {
+          if (x > laneEnds[lane] + 28) {
+            chosenLane = lane;
+            break;
+          }
+          chosenLane = lane;
+        }
+        laneEnds[chosenLane] = x + 120;
+
+        const node = document.createElement('div');
+        node.className = `fact level${fact.level}`;
+        node.style.left = `${x}px`;
+        node.style.top = `calc(50% + ${lanesBelow[chosenLane]}px)`;
+        node.innerHTML = `
+          <div class="fact-card">
+            <div class="fact-year">${formatYear(fact.year)}</div>
+            <div class="fact-text">${fact.text}</div>
+          </div>
+          <div class="fact-line"></div>
+        `;
+        layer.appendChild(node);
+      });
+    }
+
+function updateWelcomeOverlay() {
+  const anyEnabled = datasets.some(dataset => dataset.enabled);
+  welcomeOverlay.classList.toggle('hidden', anyEnabled);
+}
+
+    function render() {
+  if (!loaded) return;
+  updateWelcomeOverlay();
+  updateEraInfo();
+  clearLayer();
+  addAxis();
+  addTicks();
+  addEras();
+  addFacts();
+}
+
+    function zoomAt(clientX, factor) {
+      const before = xToYear(clientX);
+      pxPerYear = clamp(pxPerYear * factor, MIN_PX_PER_YEAR, MAX_PX_PER_YEAR);
+      const after = xToYear(clientX);
+      centerYear += before - after;
+      centerYear = clamp(centerYear, START_YEAR, END_YEAR);
+      render();
+    }
+
+    function panByPixels(dx) {
+      centerYear -= dx / pxPerYear;
+      centerYear = clamp(centerYear, START_YEAR, END_YEAR);
+      render();
+    }
+
+    function centerOnRange(startYear, endYear) {
+      const span = Math.max(0.25, endYear - startYear);
+      const desiredPxPerYear = clamp((window.innerWidth * 0.65) / span, MIN_PX_PER_YEAR, MAX_PX_PER_YEAR);
+      pxPerYear = Math.max(pxPerYear, desiredPxPerYear);
+      centerYear = clamp((startYear + endYear) / 2, START_YEAR, END_YEAR);
+    }
+
+    stage.addEventListener('mousedown', e => {
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartCenterYear = centerYear;
+      stage.classList.add('dragging');
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      stage.classList.remove('dragging');
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - dragStartX;
+      centerYear = clamp(dragStartCenterYear - dx / pxPerYear, START_YEAR, END_YEAR);
+      render();
+    });
+
+    stage.addEventListener('wheel', e => {
+      e.preventDefault();
+      const zoomIntent = Math.abs(e.deltaY) >= Math.abs(e.deltaX) || e.ctrlKey;
+      if (zoomIntent) {
+        const factor = Math.exp(-e.deltaY * 0.0015);
+        zoomAt(e.clientX, factor);
+      } else {
+        panByPixels(e.deltaX);
+      }
+    }, { passive: false });
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') panByPixels(-120);
+      else if (e.key === 'ArrowLeft') panByPixels(120);
+      else if (e.key === 'ArrowUp') zoomAt(window.innerWidth / 2, 1.18);
+      else if (e.key === 'ArrowDown') zoomAt(window.innerWidth / 2, 1 / 1.18);
+      else if (e.key === 'Escape') {
+        activeEraId = null;
+        activeEra = null;
+        render();
+      }
+    });
+
+    function getTouchDist(t1, t2) {
+      const dx = t2.clientX - t1.clientX;
+      const dy = t2.clientY - t1.clientY;
+      return Math.hypot(dx, dy);
+    }
+
+    function getTouchMidX(t1, t2) {
+      return (t1.clientX + t2.clientX) / 2;
+    }
+
+    stage.addEventListener('touchstart', e => {
+      if (e.touches.length === 1) {
+        isDragging = true;
+        dragStartX = e.touches[0].clientX;
+        dragStartCenterYear = centerYear;
+      } else if (e.touches.length === 2) {
+        isDragging = false;
+        pinchStartDist = getTouchDist(e.touches[0], e.touches[1]);
+        pinchStartPxPerYear = pxPerYear;
+        pinchAnchorYear = xToYear(getTouchMidX(e.touches[0], e.touches[1]));
+      }
+    }, { passive: false });
+
+    stage.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (e.touches.length === 1 && isDragging) {
+        const dx = e.touches[0].clientX - dragStartX;
+        centerYear = clamp(dragStartCenterYear - dx / pxPerYear, START_YEAR, END_YEAR);
+        render();
+      } else if (e.touches.length === 2) {
+        const dist = getTouchDist(e.touches[0], e.touches[1]);
+        const midX = getTouchMidX(e.touches[0], e.touches[1]);
+        pxPerYear = clamp(pinchStartPxPerYear * (dist / pinchStartDist), MIN_PX_PER_YEAR, MAX_PX_PER_YEAR);
+        centerYear = clamp(pinchAnchorYear - (midX - window.innerWidth / 2) / pxPerYear, START_YEAR, END_YEAR);
+        render();
+      }
+    }, { passive: false });
+
+    stage.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    window.addEventListener('resize', render);
+    stage.addEventListener('click', event => {
+      if (event.target === stage) {
+        activeEraId = null;
+        activeEra = null;
+        render();
+      }
+    });
+
+    async function loadScript(path) {
+      await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = path;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error(`Failed to load ${path}`));
+        document.body.appendChild(script);
+      });
+    }
+
+    async function bootstrap() {
+      const manifest = window.TIMELINE_DATASET_FILES || [];
+      for (const file of manifest) {
+        await loadScript(`./data-se/${file}`);
+      }
+      window.datasets = normalizeDatasets(window.TimelineRegistry.datasets);
+      buildLayerPanel();
+	  updateLayerPanelVisibility();
+	  updateHelpPanelVisibility();
+      loaded = true;
+      render();
+    }
+
+    bootstrap().catch(error => {
+      console.error(error);
+      layerList.innerHTML = `<div class="layer-hint">Could not load timeline data files.</div>`;
+    });
+  </script>
+</body>
+</html>
