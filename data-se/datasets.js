@@ -9,6 +9,7 @@ window.TIMELINE_DATASET_FILES = [
 
   'greece.js',
   'rome.js',
+  'china.js',
 
 //	'northam.js',
   'geoeons.js',
