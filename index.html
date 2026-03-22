@@ -459,7 +459,7 @@
 	  <div id="eraInfoText"></div>
 	</div>
     <div id="stage"><div id="timelineLayer"></div></div>
-	<button id="layerToggle" type="button">Visa lagermeny</button>
+	<button id="layerToggle" type="button">Visa temameny</button>
 	
     <div id="layerPanel">
       <div class="layer-title"></div>
@@ -472,7 +472,7 @@
 		<div id="helpPanel" class="hidden" aria-live="polite">
 		  <div class="help-title">Instruktioner</div>
 		  <div class="help-text">
-		  <p>Använd <b>lagermenyn</b> i nerdersta vänstra hörnet för att aktivera andra lager.</p>
+		  <p>Använd <b>temamenyn</b> i nerdersta vänstra hörnet för att aktivera andra lager.</p>
 		  <p>Om man <b>klickar på en era</b> kan mer fakta dyka upp.</p>
 			<p><b>Dra med musen</b> åt höger eller vänster för att flytta linjen.</p>
 			<p>Använd två fingrar eller mushjulet för att zooma in och ut.</p>
@@ -486,7 +486,7 @@
 	<div id="welcomeOverlay">
   <div id="welcomeTitle">Välkommen till Tiden</div>
   <div id="welcomeText">
-  <p>Klicka på <b>Visa lagermeny</b> för att välja tema.</p>
+  <p>Klicka på <b>Visa temameny</b> för att välja tema.</p>
   <p>Klicka på <b>?</b> för instruktioner.</p>
   </div>
 </div>
@@ -544,7 +544,7 @@ helpPanel.addEventListener('click', event => {
 
 function updateLayerPanelVisibility() {
   layerPanel.classList.toggle('hidden', !layerPanelOpen);
-  layerToggle.textContent = layerPanelOpen ? 'Göm lagermeny' : 'Visa lagermeny';
+  layerToggle.textContent = layerPanelOpen ? 'Göm temameny' : 'Visa temameny';
 }
 
 layerToggle.addEventListener('click', event => {
