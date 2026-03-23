@@ -41,7 +41,7 @@ window.TimelineRegistry.registerDataset({
     }
   ],
   facts: [
-    { year: -13800000000, text: '💥 Big Bang. Så vitt vi vet är detta början på rum och tid. Så vitt vi känner till finns ingenting före detta, inte ens tiden själv.', level: 0 },
+    { year: -13800000000, text: '💥 Big Bang. Så vitt vi vet är detta början på rum och tid. Så vitt vi känner till finns ingenting före detta, inte ens tiden självt.', level: 0 },
     { year: -4540000000, text: '🌍 Jorden bildas när stoft, sten och annat material klumpar ihop sig i det tidiga solsystemet.', level: 0 },
     { year: -2800000, text: '🦴 De äldsta kända fossilen av släktet Homo uppträder i Afrika.', level: 0 },
 
