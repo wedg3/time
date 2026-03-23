@@ -68,24 +68,25 @@
 
     .tick {
       position: absolute;
-      width: 1px;
+      width: 2px;
       background: var(--thin);
       top: calc(50% - 10px);
       height: 20px;
     }
 
     .tick.major {
-      background: rgba(255,255,255,0.28);
-      top: calc(50% - 10px);
-      height: 22px;
+      background: rgba(255,255,255,0.78);
+      top: calc(50% - 7px);
+      height: 15px;
+	  
     }
 
     .tick-label {
       position: absolute;
       transform: translateX(-50%);
-      top: calc(50% + 18px);
+      top: calc(50% + 12px);
       font-size: 12px;
-      color: var(--muted);
+      color: #cccccc;
       white-space: nowrap;
       letter-spacing: 0.02em;
     }
@@ -152,11 +153,11 @@
     .fact-line {
       position: absolute;
       left: 50%;
-      width: 0.5px;
+      width: 1px;
       transform: translateX(-50%);
       background: rgba(255,100,100,0.66);
       bottom: 100%;
-      height: 32px;
+      height: 35px;
     }
 
     .fact-card {
@@ -475,7 +476,7 @@
 		  <p>Använd <b>temamenyn</b> i nerdersta vänstra hörnet för att aktivera andra lager.</p>
 		  <p>Om man <b>klickar på en era</b> kan mer fakta dyka upp.</p>
 			<p><b>Dra med musen</b> åt höger eller vänster för att flytta linjen.</p>
-			<p><b>Zooma in</b> och ut med <b>skrollhjul</b> eller genom att dra <b>två fingrar</b> på touchpad uppåt och nedåt.</p>
+			<p><b>Zooma in</b> och ut med <b>skrollhjul</b> eller genom att dra <b>två fingrar</b> på touchpad uppåt och neråt.</p>
 			<p>Det går också att styra med <b>piltangenterna</b>. Höger/vänster för att flytta. Upp/ned för att zooma.</p>
 			
 			
@@ -925,7 +926,7 @@ band.addEventListener('mouseleave', () => {
 
     function addFacts() {
       const shown = getVisibleFacts().sort((a, b) => a.year - b.year);
-      const lanesBelow = [64, 120, 176, 232, 288, 344];
+      const lanesBelow = [44, 100, 156, 212, 268, 324];
       const laneEnds = Array(lanesBelow.length).fill(-Infinity);
 
       shown.forEach(fact => {
