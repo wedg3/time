@@ -40,8 +40,12 @@ window.TimelineRegistry.registerDataset({
       info: '💡 Upplysningen betonar förnuft, kritik, vetenskap och diskussion om rättigheter och styrelseskick. Dess idéer påverkar revolutioner, reformer och modern politisk teori.'
     },
     {
-      start: 1760, end: 1914, title: 'Industriella revolutionen', order: 0, revealZoom: 0, rowHeight: 26,
-      info: '🏭 Den industriella revolutionen omvandlar ekonomier genom maskiner, fabriker och nya energikällor. Den förändrar hur människor arbetar, var de bor och hur samhällen organiseras.'
+      start: 1760, end: 1870, title: 'Första industriella revolutionen', order: 0, revealZoom: 0, rowHeight: 26,
+      info: '🏭 Den första industriella revolutionen drivs främst av ångkraft, textilindustri, kol och järn. Fabriker växer fram och många människor flyttar från landsbygd till stad.'
+    },
+    {
+      start: 1870, end: 1914, title: 'Andra industriella revolutionen', order: 0, revealZoom: 0, rowHeight: 26,
+      info: '⚡ Den andra industriella revolutionen präglas av elektricitet, stål, kemi, olja, massproduktion och snabb teknisk utveckling. Järnvägar, telegrafi, telefon och nya industrier förändrar världen i ännu högre tempo.'
     },
     {
       start: 1914, end: 1918, title: 'Första världskriget', order: 0, revealZoom: 0, rowHeight: 26,
@@ -108,7 +112,7 @@ window.TimelineRegistry.registerDataset({
     { year: 1347, text: '☠️ Digerdöden sprids i Europa och orsakar enorm dödlighet.', level: 0 },
 
     { year: 1453, text: '🕌 Konstantinopel faller för osmanerna.', level: 0 },
-    { year: 1492, text: '🌎 Columbus når Amerika på en resa finansierad av Spanien.', level: 1 },
+    { year: 1492, text: '🌎 Columbus når Amerika på en resa finansierad av Spanien.', level: 0 },
     { year: 1517, text: '📜 Reformationen inleds och splittrar Västeuropas kristenhet.', level: 0 },
     { year: 1526, text: '🔫 Stormogulriket etableras i Indien.', level: 1 },
     { year: 1600, text: '🚢 Europeiska handelskompanier knyter samman världsdelar i växande globala nätverk.', level: 1 },
