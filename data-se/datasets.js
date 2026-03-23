@@ -1,20 +1,23 @@
 window.TIMELINE_DATASET_FILES = [
-  'major.js',
+ 
+  'geoeons.js',
+  'geoeras.js',
+  'geoperiod.js',
+ 'major.js',
   'sub.js',
     'sweden.js',
 	  'literature.js',
 	'art.js',
-//	'science.js',
+	
+'physics.js',
 
 
   'greece.js',
   'rome.js',
-  'china.js',
+  'china.js'
 
 //	'northam.js',
-  'geoeons.js',
-  'geoeras.js',
-  'geoperiod.js'
+
 
   
 ];
