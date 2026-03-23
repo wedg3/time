@@ -34,12 +34,12 @@
     }
 
     #app {
-  position: relative;
-  width: 100vw;
-  height: 100dvh;
-  overflow: hidden;
-  background: linear-gradient(to left, rgba(255,255,255,0.05), transparent 90%), #111111;
-}
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(to left, rgba(255,255,255,0.05), transparent 90%), #111111;
+    }
 
     #stage {
       position: absolute;
@@ -188,10 +188,9 @@
     }
 
   #layerToggle {
-    position: absolute;
+  position: absolute;
   left: 14px;
-  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-  z-index: 20;
+  bottom: 14px;
   padding: 10px 14px;
   background: rgba(12,12,16,0.88);
   border: 1px solid var(--panel-border);
@@ -201,7 +200,7 @@
   cursor: pointer;
   box-shadow: 0 10px 24px rgba(0,0,0,0.28);
   backdrop-filter: blur(10px);
-  
+  z-index: 20;
 }
 
 #layerToggle:hover {
@@ -211,10 +210,10 @@
 #layerPanel {
   position: absolute;
   left: 14px;
-    bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+  bottom: 58px; /* sits above the button */
   min-width: 150px;
   max-width: 280px;
-  max-height: 48vh;
+  max-height: 70vh;
   overflow: auto;
   padding: 4px 6px;
   background: rgba(200,200,200,0.8);
@@ -351,8 +350,7 @@
 	#helpToggle {
   position: absolute;
   right: 14px;
-  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-  z-index: 20;
+  bottom: 14px;
   width: 42px;
   height: 42px;
   padding: 0;
@@ -365,7 +363,7 @@
   cursor: pointer;
   box-shadow: 0 10px 24px rgba(0,0,0,0.28);
   backdrop-filter: blur(10px);
-
+  z-index: 20;
 }
 
 #helpToggle:hover {
@@ -375,7 +373,7 @@
 #helpPanel {
   position: absolute;
   right: 14px;
- bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  bottom: 64px; /* sits above the ? button */
   width: min(260px, calc(100vw - 28px));
   
   overflow: auto;
