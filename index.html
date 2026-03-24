@@ -36,7 +36,7 @@
     #app {
       position: relative;
       width: 100vw;
-       height: 100dvh;
+      height: 100dvh;
       overflow: hidden;
       background: linear-gradient(to left, rgba(255,255,255,0.05), transparent 90%), #111111;
     }
@@ -78,7 +78,6 @@
       background: rgba(255,255,255,0.78);
       top: calc(50% - 7px);
       height: 15px;
-	  
     }
 
     .tick-label {
@@ -92,37 +91,32 @@
     }
 
     .era-band {
-  position: absolute;
-  height: 30px;
-  border: none;
-  border-radius: 0;
-  overflow: hidden;
-  cursor: pointer;
-  pointer-events: auto;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+      position: absolute;
+      height: 30px;
+      border: none;
+      border-radius: 0;
+      overflow: hidden;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        inset 0 -1px 0 rgba(255,255,255,0.18);
+    }
 
-  /* only horizontal edges, no left/right box effect */
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.18),
-    inset 0 -1px 0 rgba(255,255,255,0.18);
-}
+    .era-band.active {
+      filter: brightness(1.5);
+      border: 1.5px solid #ffffff;
+      border-radius: 0px;
+      z-index: 1000;
+    }
 
-
-
-.era-band.active {
-  filter: brightness(1.5);
-  border: 1.5px solid #ffffff;
-  border-radius: 0px;
-  z-index:1000;
-}
-.era-band:hover {
-  
-  filter: brightness(1.5);
-  border: 1.5px solid #ffffff;
-  border-radius: 0px;
-  z-index:1000;
-
-}
+    .era-band:hover {
+      filter: brightness(1.5);
+      border: 1.5px solid #ffffff;
+      border-radius: 0px;
+      z-index: 1000;
+    }
 
     .era-label {
       position: absolute;
@@ -141,13 +135,27 @@
       pointer-events: none;
     }
 
+    .era-side-label {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      height: 30px;
+      padding-left: 8px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.74);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      pointer-events: none;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+      z-index: 6;
+    }
+
     .fact {
       position: absolute;
       width: 210px;
-	  min-width:;
       transform: translateX(-50%);
       pointer-events: none;
-	  z-index:10;
+      z-index: 10;
     }
 
     .fact-line {
@@ -166,12 +174,10 @@
       background: rgba(255,255,255,0.2);
       border: 1px solid rgba(255,255,255,0.08);
       backdrop-filter: blur(3px);
-	  
     }
 
     .fact.level0 .fact-card {
       border-color: rgba(255,255,255,0.12);
-      
     }
 
     .fact-year {
@@ -188,56 +194,55 @@
       color: rgba(255,255,255,0.72);
     }
 
-  #layerToggle {
-  position: absolute;
-  left: 14px;
-   bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-  padding: 10px 14px;
-  background: rgba(12,12,16,0.88);
-  border: 1px solid var(--panel-border);
-  border-radius: 2px;
-  color: rgba(255,255,255,0.9);
-  font-size: 13px;
-  cursor: pointer;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
-  backdrop-filter: blur(10px);
-  z-index: 20;
-}
+    #layerToggle {
+      position: absolute;
+      left: 14px;
+      bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+      padding: 10px 14px;
+      background: rgba(12,12,16,0.88);
+      border: 1px solid var(--panel-border);
+      border-radius: 2px;
+      color: rgba(255,255,255,0.9);
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+      backdrop-filter: blur(10px);
+      z-index: 20;
+    }
 
-#layerToggle:hover {
-  background: rgba(20,20,28,0.92);
-}
+    #layerToggle:hover {
+      background: rgba(20,20,28,0.92);
+    }
 
-#layerPanel {
-  position: absolute;
-  left: 14px;
-  bottom: calc(58px + env(safe-area-inset-bottom, 0px));
-  min-width: 150px;
-  max-width: 280px;
-  max-height: 70vh;
-  overflow: auto;
-  padding: 4px 6px;
-  background: rgba(200,200,200,0.8);
-  border: 1px solid var(--panel-border);
-  border-radius: 2px;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.36);
-  backdrop-filter: blur(10px);
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: auto;
-  z-index: 19;
-}
+    #layerPanel {
+      position: absolute;
+      left: 14px;
+      bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+      min-width: 150px;
+      max-width: 280px;
+      max-height: 70vh;
+      overflow: auto;
+      padding: 4px 6px;
+      background: rgba(200,200,200,0.8);
+      border: 1px solid var(--panel-border);
+      border-radius: 2px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.36);
+      backdrop-filter: blur(10px);
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: auto;
+      z-index: 1001;
+    }
 
-#layerPanel.hidden {
-  display: none;
-}
+    #layerPanel.hidden {
+      display: none;
+    }
 
     .layer-title {
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.14em;
       color: var(--muted);
-      
     }
 
     .layer-item + .layer-item { margin-top: 6px; }
@@ -263,80 +268,72 @@
       color: rgba(255,255,255,0.5);
     }
 
+    #eraInfoBox {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(760px, calc(100vw - 32px));
+      padding: 14px 18px;
+      border: 1px solid #ffffff;
+      border-radius: 3px;
+      text-align: center;
+      z-index: 10;
+      pointer-events: auto;
+      opacity: 0;
+      transition: opacity 0.16s ease;
+    }
 
-#eraInfoBox {
-  position: absolute;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(760px, calc(100vw - 32px));
-  padding: 14px 18px;
-  
-  border: 1px solid #ffffff;
-  border-radius: 3px;
+    #eraInfoBox.visible {
+      opacity: 1;
+    }
 
-  text-align: center;
-  z-index: 10;
-  pointer-events: auto; /* was none */
-  opacity: 0;
-  transition: opacity 0.16s ease;
-}
+    #eraInfoClose {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      width: 22px;
+      height: 22px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,1);
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-#eraInfoBox.visible {
-  opacity: 1;
-}
+    #eraInfoClose:hover {
+      color: rgba(0,0,0,1);
+    }
 
-#eraInfoClose {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  width: 22px;
-  height: 22px;
-  border: none;
-  background: transparent;
-  color: rgba(255,255,255,1);
-  font-size: 22px;
-  line-height: 1;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    #eraInfoClose:active {
+      transform: translateY(1px);
+    }
 
-#eraInfoClose:hover {
-  
-  color: rgba(0,0,0,1);
-}
-
-#eraInfoClose:active {
-  transform: translateY(1px);
-}
-
-#eraInfoTitle {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: rgba(255,255,255,1);
-  margin-bottom: 6px;
-  text-shadow:
-    -1px -1px 0 rgba(0,0,0,0.9),
-     0px -0px 0 rgba(0,0,0,0.9),
-    -1px  1px 0 rgba(0,0,0,0.9),
-     1px  1px 0 rgba(0,0,0,0.9);
-}
+    #eraInfoTitle {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: rgba(255,255,255,1);
+      margin-bottom: 6px;
+      text-shadow:
+        -1px -1px 0 rgba(0,0,0,0.9),
+         0px -0px 0 rgba(0,0,0,0.9),
+        -1px  1px 0 rgba(0,0,0,0.9),
+         1px  1px 0 rgba(0,0,0,0.9);
+    }
 
     #eraInfoText {
       font-size: 14px;
       line-height: 1.45;
-	  text-align: left;
-	  
+      text-align: left;
       color: rgba(255,255,255,1);
-	 
-	  letter-spacing: 0.02em;
-	  
-
+      letter-spacing: 0.02em;
     }
 
     @media (max-width: 700px) {
@@ -345,157 +342,209 @@
         max-width: calc(100vw - 28px);
       }
     }
-	
-	
-	
-	#helpToggle {
-  position: absolute;
-  right: 14px;
-  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  background: rgba(12,12,16,0.88);
-  border: 1px solid var(--panel-border);
-  border-radius: 999px;
-  color: rgba(255,255,255,0.92);
-  font-size: 22px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
-  backdrop-filter: blur(10px);
-  z-index: 20;
-}
 
-#helpToggle:hover {
-  background: rgba(20,20,28,0.92);
-}
+    #helpToggle {
+      position: absolute;
+      right: 14px;
+      bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+      width: 35px;
+      height: 35px;
+      padding: 0;
+      background: rgba(12,12,16,0.88);
+      border: 1px solid var(--panel-border);
+      border-radius: 999px;
+      color: rgba(255,255,255,0.92);
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+      backdrop-filter: blur(10px);
+      z-index: 20;
+    }
 
-#helpPanel {
-  position: absolute;
-  right: 14px;
-  bottom: calc(64px + env(safe-area-inset-bottom, 0px));
-  width: min(260px, calc(100vw - 28px));
-  
-  overflow: auto;
-  padding: 12px 14px;
-  background: rgba(200,200,200,0.88);
-  border: 1px solid var(--panel-border);
-  border-radius: 2px;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.36);
-  backdrop-filter: blur(10px);
-  color: rgba(255,255,255,0.88);
-  z-index: 19;
-}
+    #helpToggle:hover {
+      background: rgba(20,20,28,0.92);
+    }
 
-#helpPanel.hidden {
-  display: none;
-}
+    #helpPanel {
+      position: absolute;
+      right: 14px;
+      bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+      width: min(260px, calc(100vw - 28px));
+      overflow: auto;
+      padding: 12px 14px;
+      background: rgba(200,200,200,0.88);
+      border: 1px solid var(--panel-border);
+      border-radius: 2px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.36);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,0.88);
+      z-index: 19;
+    }
 
-.help-title {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: rgba(0,0,0,0.82);
-  margin-bottom: 10px;
-}
+    #helpPanel.hidden {
+      display: none;
+    }
 
-.help-text {
-  font-size: 12px;
-  line-height: 1.2;
-  color: rgba(0,0,0,0.82);
-}
+    .help-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(0,0,0,0.82);
+      margin-bottom: 10px;
+    }
 
-.help-text p {
-  margin: 0 0 10px 0;
-}
+    .help-text {
+      font-size: 12px;
+      line-height: 1.2;
+      color: rgba(0,0,0,0.82);
+    }
 
-.help-text p:last-child {
-  margin-bottom: 0;
-}
+    .help-text p {
+      margin: 0 0 10px 0;
+    }
 
-#welcomeOverlay {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  align-items: center;
-  justify-items: center;
-  z-index: 8;
-  pointer-events: none;
-  text-align: center;
-  padding: 24px;
-}
+    .help-text p:last-child {
+      margin-bottom: 0;
+    }
 
-#welcomeOverlay.hidden {
-  display: none;
-}
+    #welcomeOverlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      align-items: center;
+      justify-items: center;
+      z-index: 8;
+      pointer-events: none;
+      text-align: center;
+      padding: 24px;
+    }
 
-#welcomeTitle {
-  align-self: center;
-  justify-self: center;
-  font-size: clamp(36px, 6vw, 72px);
-  font-weight: 300;
-  letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.90);
-  text-shadow:
-    0 0 18px rgba(255,255,255,0.10),
-    0 2px 10px rgba(0,0,0,0.55);
-}
+    #welcomeOverlay.hidden {
+      display: none;
+    }
 
-#welcomeText {
-  align-self: center;
-  justify-self: center;
-  font-size: clamp(10px, 1vw, 12px);
-  color: rgba(255,255,255,0.82);
-  letter-spacing: 0.04em;
-}
+    #welcomeTitle {
+      align-self: center;
+      justify-self: center;
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.90);
+      text-shadow:
+        0 0 18px rgba(255,255,255,0.10),
+        0 2px 10px rgba(0,0,0,0.55);
+    }
+
+    #welcomeText {
+      align-self: center;
+      justify-self: center;
+      font-size: clamp(10px, 1vw, 12px);
+      color: rgba(255,255,255,0.82);
+      letter-spacing: 0.04em;
+    }
+
+    /* Top-right mini controls */
+    #topRightTools {
+      position: absolute;
+      top: calc(14px + env(safe-area-inset-top, 0px));
+      right: 14px;
+      display: flex;
+      gap: 8px;
+      z-index: 24;
+    }
+
+    .mini-tool-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(12,12,16,0.82);
+      border: 1px solid var(--panel-border);
+     
+      color: rgba(255,255,255,0.92);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+      backdrop-filter: blur(10px);
+      transition: background 0.12s ease, transform 0.12s ease, border-color 0.12s ease;
+    }
+
+    .mini-tool-btn:hover {
+      background: rgba(20,20,28,0.92);
+      transform: translateY(-1px);
+    }
+
+    .mini-tool-btn.active {
+      border-color: rgba(255,255,255,0.1);
+      background: rgba(38,38,50,0.74);
+    }
+
+    .mini-tool-btn svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
   <div id="app">
     <div id="eraInfoBox" aria-live="polite">
-	  <button id="eraInfoClose" type="button" aria-label="Close era info">×</button>
-	  <div id="eraInfoTitle"></div>
-	  <div id="eraInfoText"></div>
-	</div>
+      <button id="eraInfoClose" type="button" aria-label="Close era info">×</button>
+      <div id="eraInfoTitle"></div>
+      <div id="eraInfoText"></div>
+    </div>
+
+    <div id="topRightTools">
+      <button id="layerNameToggle" class="mini-tool-btn" type="button" aria-label="Show layer names" title="Dölj/Visa temaetiketter">T</button>
+
+      <button id="colorizeLayersBtn" class="mini-tool-btn" type="button" aria-label="Randomize layer colors" title="Färgsätt varje lager med egen färgskala">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3c-4.97 0-9 3.58-9 8 0 2.4 1.23 4.55 3.17 6.02.48.36 1.11.76 1.11 1.45 0 .51-.31.95-.31 1.54 0 1.11.9 1.99 2.01 1.99h1.23c3.18 0 5.79-2.2 5.79-4.9 0-.62-.17-1.19-.17-1.75 0-1.18.81-1.74 1.94-1.74H19c1.66 0 3-1.34 3-3 0-4.42-4.03-8-10-8Z" fill="currentColor"/>
+          <circle cx="7.5" cy="11" r="1.1" fill="#111"/>
+          <circle cx="10.5" cy="8" r="1.1" fill="#111"/>
+          <circle cx="14" cy="11" r="1.1" fill="#111"/>
+        </svg>
+      </button>
+
+      <button id="resetLayerColorsBtn" class="mini-tool-btn" type="button" aria-label="Reset colors" title="Återställ ursprungliga färger">↺</button>
+    </div>
+
     <div id="stage"><div id="timelineLayer"></div></div>
-	<button id="layerToggle" type="button">Visa temameny</button>
-	
+
+    <button id="layerToggle" type="button">Visa temameny</button>
+
     <div id="layerPanel">
       <div class="layer-title"></div>
       <div id="layerList"></div>
-    
     </div>
-	
-	<button id="helpToggle" type="button" aria-label="Show instructions">?</button>
 
-		<div id="helpPanel" class="hidden" aria-live="polite">
-		  <div class="help-title">Instruktioner</div>
-		  <div class="help-text">
-		  <p>Använd <b>temamenyn</b> i nerdersta vänstra hörnet för att aktivera andra lager.</p>
-		  <p>Om man <b>klickar på en era</b> kan mer fakta dyka upp.</p>
-			<p><b>Dra med musen</b> åt höger eller vänster för att flytta linjen.</p>
-			<p><b>Zooma in</b> och ut med <b>skrollhjul</b> eller genom att dra <b>två fingrar</b> på touchpad uppåt och neråt.</p>
-			<p>Det går också att styra med <b>piltangenterna</b>. Höger/vänster för att flytta. Upp/ned för att zooma.</p>
-			
-			
-		  </div>
-		</div>
-	
-	
-	<div id="welcomeOverlay">
-  <div id="welcomeTitle">Välkommen till Tiden</div>
-  <div id="welcomeText">
-  <p>Klicka på <b>Visa temameny</b> för att välja tema.</p>
-  <p>Klicka på <b>?</b> för instruktioner.</p>
+    <button id="helpToggle" type="button" aria-label="Show instructions">?</button>
+
+    <div id="helpPanel" class="hidden" aria-live="polite">
+      <div class="help-title">Instruktioner</div>
+      <div class="help-text">
+        <p>Använd <b>temamenyn</b> i nerdersta vänstra hörnet för att aktivera andra lager.</p>
+        <p>Om man <b>klickar på en era</b> kan mer fakta dyka upp.</p>
+        <p><b>Dra med musen</b> åt höger eller vänster för att flytta linjen.</p>
+        <p><b>Zooma in</b> och ut med <b>skrollhjul</b> eller genom att dra <b>två fingrar</b> på touchpad uppåt och neråt.</p>
+        <p>Det går också att styra med <b>piltangenterna</b>. Höger/vänster för att flytta. Upp/ned för att zooma.</p>
+      </div>
+    </div>
+
+    <div id="welcomeOverlay">
+      <div id="welcomeTitle">Välkommen till Tiden</div>
+      <div id="welcomeText">
+        <p>Klicka på <b>Visa temameny</b> för att välja tema.</p>
+        <p>Klicka på <b>?</b> för instruktioner.</p>
+      </div>
+    </div>
   </div>
-</div>
-	
-  </div>
-  
-  
-  
 
   <script>
     window.TimelineRegistry = {
@@ -508,7 +557,7 @@
   <script src="./data-se/datasets.js"></script>
   <script>
     const START_YEAR = -13_800_000_000;
-const END_YEAR = 2026;
+    const END_YEAR = 2026;
 
     const stage = document.getElementById('stage');
     const layer = document.getElementById('timelineLayer');
@@ -516,65 +565,24 @@ const END_YEAR = 2026;
     const eraInfoBox = document.getElementById('eraInfoBox');
     const eraInfoTitle = document.getElementById('eraInfoTitle');
     const eraInfoText = document.getElementById('eraInfoText');
-	const eraInfoClose = document.getElementById('eraInfoClose');
-	const welcomeOverlay = document.getElementById('welcomeOverlay');
-	const layerPanel = document.getElementById('layerPanel');
-const layerToggle = document.getElementById('layerToggle');
+    const eraInfoClose = document.getElementById('eraInfoClose');
+    const welcomeOverlay = document.getElementById('welcomeOverlay');
+    const layerPanel = document.getElementById('layerPanel');
+    const layerToggle = document.getElementById('layerToggle');
+    const helpToggle = document.getElementById('helpToggle');
+    const helpPanel = document.getElementById('helpPanel');
 
-const helpToggle = document.getElementById('helpToggle');
-const helpPanel = document.getElementById('helpPanel');
+    const layerNameToggle = document.getElementById('layerNameToggle');
+    const colorizeLayersBtn = document.getElementById('colorizeLayersBtn');
+    const resetLayerColorsBtn = document.getElementById('resetLayerColorsBtn');
 
-let layerPanelOpen = false;
+    let layerPanelOpen = false;
+    let helpPanelOpen = false;
 
-
-let helpPanelOpen = false;
-
-function updateHelpPanelVisibility() {
-  helpPanel.classList.toggle('hidden', !helpPanelOpen);
-}
-
-helpToggle.addEventListener('click', event => {
-  event.stopPropagation();
-  helpPanelOpen = !helpPanelOpen;
-  updateHelpPanelVisibility();
-});
-
-helpPanel.addEventListener('click', event => {
-  event.stopPropagation();
-});
-
-function updateLayerPanelVisibility() {
-  layerPanel.classList.toggle('hidden', !layerPanelOpen);
-  layerToggle.textContent = layerPanelOpen ? 'Göm temameny' : 'Visa temameny';
-}
-
-layerToggle.addEventListener('click', event => {
-  event.stopPropagation();
-  layerPanelOpen = !layerPanelOpen;
-  updateLayerPanelVisibility();
-});
-
-layerPanel.addEventListener('click', event => {
-  event.stopPropagation();
-});
-
-
-	
-	eraInfoClose.addEventListener('click', event => {
-	  event.stopPropagation();
-	  activeEraId = null;
-	  activeEra = null;
-	  render();
-	});
-	
-	eraInfoBox.addEventListener('click', event => {
-  event.stopPropagation();
-});
-
-let centerYear = 1200;
-let pxPerYear = window.innerWidth / (2000 - 400);
-const MIN_PX_PER_YEAR = 0.00000005;
-const MAX_PX_PER_YEAR = 22000;
+    let centerYear = 1200;
+    let pxPerYear = window.innerWidth / (2000 - 400);
+    const MIN_PX_PER_YEAR = 0.00000005;
+    const MAX_PX_PER_YEAR = 22000;
 
     let isDragging = false;
     let dragStartX = 0;
@@ -587,27 +595,28 @@ const MAX_PX_PER_YEAR = 22000;
     let activeEraId = null;
     let activeEra = null;
     let loaded = false;
+    let hoveredEra = null;
 
+    let showLayerNamesRight = true;
+    let datasetHueMap = null;
 
-let hoveredEra = null;
-
-const ERA_COLOR_POOL = [
-  { bg: 'rgba(255, 99, 99, 0.58)', border: 'rgba(255, 140, 140, 0.88)' },
-  { bg: 'rgba(255, 140, 66, 0.58)', border: 'rgba(255, 175, 110, 0.88)' },
-  { bg: 'rgba(255, 184, 61, 0.58)', border: 'rgba(255, 210, 120, 0.88)' },
-  { bg: 'rgba(255, 220, 64, 0.56)', border: 'rgba(255, 235, 130, 0.84)' },
-  { bg: 'rgba(170, 230, 60, 0.56)', border: 'rgba(200, 245, 120, 0.84)' },
-  { bg: 'rgba(60, 220, 110, 0.56)', border: 'rgba(120, 245, 160, 0.84)' },
-  { bg: 'rgba(28, 220, 160, 0.56)', border: 'rgba(110, 245, 190, 0.84)' },
-  { bg: 'rgba(35, 220, 205, 0.56)', border: 'rgba(120, 245, 230, 0.84)' },
-  { bg: 'rgba(35, 210, 245, 0.56)', border: 'rgba(120, 230, 255, 0.84)' },
-  { bg: 'rgba(80, 155, 255, 0.58)', border: 'rgba(145, 190, 255, 0.88)' },
-  { bg: 'rgba(115, 115, 255, 0.58)', border: 'rgba(170, 170, 255, 0.88)' },
-  { bg: 'rgba(155, 110, 255, 0.58)', border: 'rgba(195, 165, 255, 0.88)' },
-  { bg: 'rgba(190, 100, 255, 0.58)', border: 'rgba(220, 160, 255, 0.88)' },
-  { bg: 'rgba(235, 90, 255, 0.56)', border: 'rgba(245, 155, 255, 0.84)' },
-  { bg: 'rgba(255, 95, 175, 0.58)', border: 'rgba(255, 160, 210, 0.88)' }
-];
+    const ERA_COLOR_POOL = [
+      { bg: 'rgba(255, 99, 99, 0.58)', border: 'rgba(255, 140, 140, 0.88)' },
+      { bg: 'rgba(255, 140, 66, 0.58)', border: 'rgba(255, 175, 110, 0.88)' },
+      { bg: 'rgba(255, 184, 61, 0.58)', border: 'rgba(255, 210, 120, 0.88)' },
+      { bg: 'rgba(255, 220, 64, 0.56)', border: 'rgba(255, 235, 130, 0.84)' },
+      { bg: 'rgba(170, 230, 60, 0.56)', border: 'rgba(200, 245, 120, 0.84)' },
+      { bg: 'rgba(60, 220, 110, 0.56)', border: 'rgba(120, 245, 160, 0.84)' },
+      { bg: 'rgba(28, 220, 160, 0.56)', border: 'rgba(110, 245, 190, 0.84)' },
+      { bg: 'rgba(35, 220, 205, 0.56)', border: 'rgba(120, 245, 230, 0.84)' },
+      { bg: 'rgba(35, 210, 245, 0.56)', border: 'rgba(120, 230, 255, 0.84)' },
+      { bg: 'rgba(80, 155, 255, 0.58)', border: 'rgba(145, 190, 255, 0.88)' },
+      { bg: 'rgba(115, 115, 255, 0.58)', border: 'rgba(170, 170, 255, 0.88)' },
+      { bg: 'rgba(155, 110, 255, 0.58)', border: 'rgba(195, 165, 255, 0.88)' },
+      { bg: 'rgba(190, 100, 255, 0.58)', border: 'rgba(220, 160, 255, 0.88)' },
+      { bg: 'rgba(235, 90, 255, 0.56)', border: 'rgba(245, 155, 255, 0.84)' },
+      { bg: 'rgba(255, 95, 175, 0.58)', border: 'rgba(255, 160, 210, 0.88)' }
+    ];
 
     function clamp(v, min, max) {
       return Math.max(min, Math.min(max, v));
@@ -654,42 +663,42 @@ const ERA_COLOR_POOL = [
     }
 
     function formatYear(year) {
-  const abs = Math.abs(year);
-  const sign = year < 0 ? '-' : '';
+      const abs = Math.abs(year);
+      const sign = year < 0 ? '-' : '';
 
-  function compact(value, suffix) {
-    const rounded =
-      value >= 100 ? Math.round(value) :
-      value >= 10 ? Number(value.toFixed(1)) :
-      Number(value.toFixed(2));
-    return `${sign}${rounded}${suffix}`;
-  }
+      function compact(value, suffix) {
+        const rounded =
+          value >= 100 ? Math.round(value) :
+          value >= 10 ? Number(value.toFixed(1)) :
+          Number(value.toFixed(2));
+        return `${sign}${rounded}${suffix}`;
+      }
 
-  if (abs >= 1_000_000_000) return compact(abs / 1_000_000_000, 'B');
-  if (abs >= 1_000_000) return compact(abs / 1_000_000, 'M');
+      if (abs >= 1_000_000_000) return compact(abs / 1_000_000_000, 'B');
+      if (abs >= 1_000_000) return compact(abs / 1_000_000, 'M');
 
-  if (Math.abs(year - Math.round(year)) < 1e-9) {
-    return `${Math.round(year)}`;
-  }
+      if (Math.abs(year - Math.round(year)) < 1e-9) {
+        return `${Math.round(year)}`;
+      }
 
-  return `${Number(year.toFixed(2))}`;
-}
+      return `${Number(year.toFixed(2))}`;
+    }
 
     function getTickStep() {
-  const targetPx = 90;
-  const rawYears = targetPx / pxPerYear;
+      const targetPx = 90;
+      const rawYears = targetPx / pxPerYear;
 
-  if (rawYears <= 0) return 1;
+      if (rawYears <= 0) return 1;
 
-  const exponent = Math.floor(Math.log10(rawYears));
-  const base = Math.pow(10, exponent);
-  const scaled = rawYears / base;
+      const exponent = Math.floor(Math.log10(rawYears));
+      const base = Math.pow(10, exponent);
+      const scaled = rawYears / base;
 
-  if (scaled <= 1) return 1 * base;
-  if (scaled <= 2) return 2 * base;
-  if (scaled <= 5) return 5 * base;
-  return 10 * base;
-}
+      if (scaled <= 1) return 1 * base;
+      if (scaled <= 2) return 2 * base;
+      if (scaled <= 5) return 5 * base;
+      return 10 * base;
+    }
 
     function visibleFactLevel() {
       if (pxPerYear < 2.5) return 0;
@@ -699,29 +708,145 @@ const ERA_COLOR_POOL = [
 
     function normalizeDatasets(rawDatasets) {
       return rawDatasets.map((dataset, index) => {
+        const datasetId = dataset.id || `dataset-${index}`;
         const enabled = dataset.enabledByDefault !== false;
-        return {
-          ...dataset,
-          id: dataset.id || `dataset-${index}`,
-          enabled,
-          eras: assignEraColors((dataset.eras || []).map((era, eraIndex) => ({
+
+        const erasWithDefaults = assignEraColors(
+          (dataset.eras || []).map((era, eraIndex) => ({
             order: era.order ?? 0,
             rowHeight: era.rowHeight ?? 30,
             labelMinWidth: era.labelMinWidth ?? 62,
             revealZoom: era.revealZoom ?? 0,
-            id: era.id || `${dataset.id || `dataset-${index}`}-era-${eraIndex}`,
-            datasetId: dataset.id || `dataset-${index}`,
+            id: era.id || `${datasetId}-era-${eraIndex}`,
+            datasetId,
+            eraIndex,
             ...era
-          })), dataset.id || `dataset-${index}`),
+          })),
+          datasetId
+        ).map((era) => ({
+          ...era,
+          originalColor: { ...era.color }
+        }));
+
+        return {
+          ...dataset,
+          id: datasetId,
+          enabled,
+          eras: erasWithDefaults,
           facts: (dataset.facts || []).map((fact, factIndex) => ({
-            id: fact.id || `${dataset.id || `dataset-${index}`}-fact-${factIndex}`,
-            datasetId: dataset.id || `dataset-${index}`,
+            id: fact.id || `${datasetId}-fact-${factIndex}`,
+            datasetId,
             level: fact.level ?? 0,
             year: fact.year,
             ...fact
           }))
         };
       });
+    }
+
+    function updateHelpPanelVisibility() {
+      helpPanel.classList.toggle('hidden', !helpPanelOpen);
+    }
+
+    function updateLayerPanelVisibility() {
+      layerPanel.classList.toggle('hidden', !layerPanelOpen);
+      layerToggle.textContent = layerPanelOpen ? 'Göm temameny' : 'Visa temameny';
+    }
+
+    helpToggle.addEventListener('click', event => {
+      event.stopPropagation();
+      helpPanelOpen = !helpPanelOpen;
+      updateHelpPanelVisibility();
+    });
+
+    helpPanel.addEventListener('click', event => {
+      event.stopPropagation();
+    });
+
+    layerToggle.addEventListener('click', event => {
+      event.stopPropagation();
+      layerPanelOpen = !layerPanelOpen;
+      updateLayerPanelVisibility();
+    });
+
+    layerPanel.addEventListener('click', event => {
+      event.stopPropagation();
+    });
+
+    eraInfoClose.addEventListener('click', event => {
+      event.stopPropagation();
+      activeEraId = null;
+      activeEra = null;
+      render();
+    });
+
+    eraInfoBox.addEventListener('click', event => {
+      event.stopPropagation();
+    });
+
+    layerNameToggle.addEventListener('click', event => {
+      event.stopPropagation();
+      showLayerNamesRight = !showLayerNamesRight;
+      layerNameToggle.classList.toggle('active', showLayerNamesRight);
+      render();
+    });
+
+    colorizeLayersBtn.addEventListener('click', event => {
+      event.stopPropagation();
+      datasetHueMap = createRandomDatasetHueMap();
+      colorizeLayersBtn.classList.add('active');
+      resetLayerColorsBtn.classList.add('active');
+      render();
+    });
+
+    resetLayerColorsBtn.addEventListener('click', event => {
+      event.stopPropagation();
+      datasetHueMap = null;
+      colorizeLayersBtn.classList.remove('active');
+      resetLayerColorsBtn.classList.remove('active');
+      render();
+    });
+
+    function createRandomDatasetHueMap() {
+      const hueMap = {};
+      const rng = mulberry32((Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0);
+      const all = datasets.map(d => d.id);
+
+      const startHue = Math.floor(rng() * 360);
+      const step = 137.508; // golden angle for good spread
+
+      all.forEach((datasetId, index) => {
+        let hue = (startHue + index * step + rng() * 28 - 14) % 360;
+        if (hue < 0) hue += 360;
+        hueMap[datasetId] = hue;
+      });
+
+      return hueMap;
+    }
+
+    function hueColor(h, s, l, a) {
+      return `hsla(${((h % 360) + 360) % 360}, ${s}%, ${l}%, ${a})`;
+    }
+
+    function getDatasetById(datasetId) {
+      return datasets.find(d => d.id === datasetId) || null;
+    }
+
+    function getEraDisplayColor(era) {
+      if (!datasetHueMap || datasetHueMap[era.datasetId] == null) {
+        return era.originalColor || era.color;
+      }
+
+      const baseHue = datasetHueMap[era.datasetId];
+      const offset = ((era.eraIndex || 0) % 5 - 2) * 8 + (era.order || 0) * 4;
+      const hue = baseHue + offset;
+      const sat = clamp(76 - ((era.eraIndex || 0) % 3) * 6, 52, 84);
+      const light = clamp(56 - ((era.eraIndex || 0) % 4) * 5, 34, 68);
+
+      return {
+        bg: hueColor(hue, sat, light, 0.58),
+        border: hueColor(hue, Math.min(92, sat + 8), Math.min(88, light + 18), 0.9)
+      };
     }
 
     function buildLayerPanel() {
@@ -754,31 +879,33 @@ const ERA_COLOR_POOL = [
       });
     }
 
-function getPreviewEra() {
-  return hoveredEra || activeEra;
-}
+    function getPreviewEra() {
+      return hoveredEra || activeEra;
+    }
 
-  function updateEraInfo() {
-  const previewEra = getPreviewEra();
+    function updateEraInfo() {
+      const previewEra = getPreviewEra();
 
-  if (!previewEra) {
-    eraInfoTitle.textContent = '';
-    eraInfoText.textContent = '';
-    eraInfoBox.classList.remove('visible');
-    eraInfoBox.style.background = '';
-    eraInfoBox.style.borderColor = '';
-    return;
-  }
+      if (!previewEra) {
+        eraInfoTitle.textContent = '';
+        eraInfoText.textContent = '';
+        eraInfoBox.classList.remove('visible');
+        eraInfoBox.style.background = '';
+        eraInfoBox.style.borderColor = '';
+        return;
+      }
 
-  eraInfoTitle.textContent = previewEra.title || '';
-  eraInfoText.textContent = previewEra.info || '';
+      eraInfoTitle.textContent = previewEra.title || '';
+      eraInfoText.textContent = previewEra.info || '';
 
-  if (previewEra.color) {
-    eraInfoBox.style.background = previewEra.color.bg;
-  }
+      const displayColor = getEraDisplayColor(previewEra);
+      if (displayColor) {
+        eraInfoBox.style.background = displayColor.bg;
+        eraInfoBox.style.borderColor = displayColor.border;
+      }
 
-  eraInfoBox.classList.add('visible');
-}
+      eraInfoBox.classList.add('visible');
+    }
 
     function clearLayer() {
       while (layer.firstChild) layer.removeChild(layer.firstChild);
@@ -805,12 +932,12 @@ function getPreviewEra() {
         layer.appendChild(tick);
 
         if (isMajor && y >= -13_800_000_000 && y <= 2200) {
-		  const label = document.createElement('div');
-		  label.className = 'tick-label';
-		  label.style.left = `${x}px`;
-		  label.textContent = formatYear(y);
-		  layer.appendChild(label);
-		}
+          const label = document.createElement('div');
+          label.className = 'tick-label';
+          label.style.left = `${x}px`;
+          label.textContent = formatYear(y);
+          layer.appendChild(label);
+        }
       }
     }
 
@@ -824,89 +951,118 @@ function getPreviewEra() {
         .filter(era => pxPerYear >= (era.revealZoom || 0));
     }
 
-    function addEras() {
-      const enabled = getEnabledDatasets();
-      const ordered = enabled.map((dataset, datasetIndex) => ({
-        dataset,
-        datasetIndex,
-        eras: dataset.eras.filter(era => pxPerYear >= (era.revealZoom || 0))
-						
-      }));
+ function addEras() {
+  const enabled = getEnabledDatasets();
+  const ordered = enabled.map((dataset, datasetIndex) => ({
+    dataset,
+    datasetIndex,
+    eras: dataset.eras.filter(era => pxPerYear >= (era.revealZoom || 0))
+  }));
 
-      const majorDatasetId = 'major';
-      const layerDatasets = [
-        ...ordered.filter(item => item.dataset.id === majorDatasetId),
-        ...ordered.filter(item => item.dataset.id !== majorDatasetId)
-      ];
+  const majorDatasetId = 'major';
+  const layerDatasets = [
+    ...ordered.filter(item => item.dataset.id === majorDatasetId),
+    ...ordered.filter(item => item.dataset.id !== majorDatasetId)
+  ];
 
-      const baseTop = window.innerHeight / 2 - 50;
-      const rowGap = 10;
-      const rowMap = new Map();
-      let nextRow = 0;
+  const baseTop = window.innerHeight / 2 - 50;
+  const rowGap = 10;
+  const rowMap = new Map();
+  let nextRow = 0;
 
-      layerDatasets.forEach(item => {
-        item.eras
-          .sort((a, b) => (a.order - b.order) || (a.start - b.start))
-          .forEach(era => {
-            const rowKey = `${item.dataset.id}:${era.order || 0}`;
-            if (!rowMap.has(rowKey)) {
-              rowMap.set(rowKey, nextRow++);
-            }
-            const visualRow = rowMap.get(rowKey);
-            const rawX1 = yearToX(era.start);
-            const rawX2 = yearToX(era.end);
-            if (rawX2 < 0 || rawX1 > window.innerWidth) return;
+  const rowLabelData = new Map();
 
-            const x1 = Math.max(0, rawX1);
-            const x2 = Math.min(window.innerWidth, rawX2);
-            const width = x2 - x1;
-            if (width < 2) return;
+  layerDatasets.forEach(item => {
+    item.eras
+      .sort((a, b) => (a.order - b.order) || (a.start - b.start))
+      .forEach(era => {
+        const rowKey = `${item.dataset.id}:${era.order || 0}`;
+        if (!rowMap.has(rowKey)) {
+          rowMap.set(rowKey, nextRow++);
+        }
 
-            const band = document.createElement('button');
-            band.type = 'button';
-            band.className = `era-band${activeEraId === era.id ? ' active' : ''}`;
-            band.style.left = `${x1}px`;
-            band.style.width = `${width}px`;
-            band.style.top = `${baseTop - visualRow * (era.rowHeight + rowGap)}px`;
-            band.style.height = `${era.rowHeight}px`;
-            band.style.background = era.color.bg;
-            band.style.borderColor = era.color.border;
-            band.style.opacity = `${era.opacity ?? 1}`;
-            band.dataset.eraId = era.id;
-            band.title = era.title;
+        const visualRow = rowMap.get(rowKey);
+        const rawX1 = yearToX(era.start);
+        const rawX2 = yearToX(era.end);
+        if (rawX2 < 0 || rawX1 > window.innerWidth) return;
 
-            band.addEventListener('click', event => {
-			  event.stopPropagation();
-			  const willActivate = activeEraId !== era.id;
-			  activeEraId = willActivate ? era.id : null;
-			  activeEra = willActivate ? era : null;
-			  if (willActivate) centerOnRange(era.start, era.end);
-			  render();
-			});
+        const x1 = Math.max(0, rawX1);
+        const x2 = Math.min(window.innerWidth, rawX2);
+        const width = x2 - x1;
+        if (width < 2) return;
 
-            if (width > (era.labelMinWidth || 62)) {
-              const label = document.createElement('div');
-              label.className = 'era-label';
-              label.textContent = era.title;
-              band.appendChild(label);
-            }
+        const bandTop = baseTop - visualRow * (era.rowHeight + rowGap);
+        const displayColor = getEraDisplayColor(era);
 
-band.addEventListener('mouseenter', () => {
-  hoveredEra = era;
-  updateEraInfo();
-});
+        const band = document.createElement('button');
+        band.type = 'button';
+        band.className = `era-band${activeEraId === era.id ? ' active' : ''}`;
+        band.style.left = `${x1}px`;
+        band.style.width = `${width}px`;
+        band.style.top = `${bandTop}px`;
+        band.style.height = `${era.rowHeight}px`;
+        band.style.background = displayColor.bg;
+        band.style.borderColor = displayColor.border;
+        band.style.opacity = `${era.opacity ?? 1}`;
+        band.dataset.eraId = era.id;
+        band.title = era.title;
 
-band.addEventListener('mouseleave', () => {
-  if (hoveredEra && hoveredEra.id === era.id) {
-    hoveredEra = null;
-    updateEraInfo();
-  }
-});
+        band.addEventListener('click', event => {
+          event.stopPropagation();
+          const willActivate = activeEraId !== era.id;
+          activeEraId = willActivate ? era.id : null;
+          activeEra = willActivate ? era : null;
+          if (willActivate) centerOnRange(era.start, era.end);
+          render();
+        });
 
-            layer.appendChild(band);
-          });
+        if (width > (era.labelMinWidth || 62)) {
+          const label = document.createElement('div');
+          label.className = 'era-label';
+          label.textContent = era.title;
+          band.appendChild(label);
+        }
+
+        band.addEventListener('mouseenter', () => {
+          hoveredEra = era;
+          updateEraInfo();
+        });
+
+        band.addEventListener('mouseleave', () => {
+          if (hoveredEra && hoveredEra.id === era.id) {
+            hoveredEra = null;
+            updateEraInfo();
+          }
+        });
+
+        layer.appendChild(band);
+
+        if (showLayerNamesRight) {
+          const existing = rowLabelData.get(rowKey);
+          if (!existing || x2 > existing.rightX) {
+            rowLabelData.set(rowKey, {
+              rightX: x2,
+              top: bandTop,
+              height: era.rowHeight,
+              text: item.dataset.label || item.dataset.id
+            });
+          }
+        }
       });
+  });
+
+  if (showLayerNamesRight) {
+    for (const row of rowLabelData.values()) {
+      const sideLabel = document.createElement('div');
+      sideLabel.className = 'era-side-label';
+      sideLabel.style.left = `${Math.min(window.innerWidth - 6, row.rightX + 6)}px`;
+      sideLabel.style.top = `${row.top}px`;
+      sideLabel.style.height = `${row.height}px`;
+      sideLabel.textContent = row.text;
+      layer.appendChild(sideLabel);
     }
+  }
+}
 
     function factBelongsToActiveEra(fact) {
       if (!activeEra) return false;
@@ -958,21 +1114,21 @@ band.addEventListener('mouseleave', () => {
       });
     }
 
-function updateWelcomeOverlay() {
-  const anyEnabled = datasets.some(dataset => dataset.enabled);
-  welcomeOverlay.classList.toggle('hidden', anyEnabled);
-}
+    function updateWelcomeOverlay() {
+      const anyEnabled = datasets.some(dataset => dataset.enabled);
+      welcomeOverlay.classList.toggle('hidden', anyEnabled);
+    }
 
     function render() {
-  if (!loaded) return;
-  updateWelcomeOverlay();
-  updateEraInfo();
-  clearLayer();
-  addAxis();
-  addTicks();
-  addEras();
-  addFacts();
-}
+      if (!loaded) return;
+      updateWelcomeOverlay();
+      updateEraInfo();
+      clearLayer();
+      addAxis();
+      addTicks();
+      addEras();
+      addFacts();
+    }
 
     function zoomAt(clientX, factor) {
       const before = xToYear(clientX);
@@ -1037,18 +1193,18 @@ function updateWelcomeOverlay() {
         render();
       }
     });
-	
-	window.addEventListener('click', () => {
-  if (layerPanelOpen) {
-    layerPanelOpen = false;
-    updateLayerPanelVisibility();
-  }
 
-  if (helpPanelOpen) {
-    helpPanelOpen = false;
-    updateHelpPanelVisibility();
-  }
-});
+    window.addEventListener('click', () => {
+      if (layerPanelOpen) {
+        layerPanelOpen = false;
+        updateLayerPanelVisibility();
+      }
+
+      if (helpPanelOpen) {
+        helpPanelOpen = false;
+        updateHelpPanelVisibility();
+      }
+    });
 
     function getTouchDist(t1, t2) {
       const dx = t2.clientX - t1.clientX;
@@ -1093,6 +1249,7 @@ function updateWelcomeOverlay() {
     });
 
     window.addEventListener('resize', render);
+
     stage.addEventListener('click', event => {
       if (event.target === stage) {
         activeEraId = null;
@@ -1118,8 +1275,8 @@ function updateWelcomeOverlay() {
       }
       window.datasets = normalizeDatasets(window.TimelineRegistry.datasets);
       buildLayerPanel();
-	  updateLayerPanelVisibility();
-	  updateHelpPanelVisibility();
+      updateLayerPanelVisibility();
+      updateHelpPanelVisibility();
       loaded = true;
       render();
     }
