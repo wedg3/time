@@ -40,11 +40,11 @@ window.TimelineRegistry.registerDataset({
       info: '🌿 Jugendstilen kännetecknas av organiska linjer, naturformer och dekor som flyter över ytor och föremål. Konst, möbler och arkitektur knöts ofta samman till en helhet.'
     },
     {
-      start: 1910, end: 1930, title: 'Art Deco', order: 0, revealZoom: 0, rowHeight: 24, labelMinWidth: 66,
+      start: 1920, end: 1935, title: 'Art Deco', order: 0, revealZoom: 0, rowHeight: 24, labelMinWidth: 66,
       info: '✨ Art Deco kombinerade elegans med modernitet genom geometriska former, starka kontraster och exklusiva material. Stilen syns i byggnader, interiörer, möbler och grafisk design.'
     },
     {
-      start: 1920, end: 1970, title: 'Modernism / Funktionalism', order: 0, revealZoom: 0, rowHeight: 24, labelMinWidth: 118,
+      start: 1920, end: 1960, title: 'Modernism / Funktionalism', order: 0, revealZoom: 0, rowHeight: 24, labelMinWidth: 118,
       info: '🏢 Modernismen och funktionalismen betonade enkelhet, funktion och nya material. Ornament tonades ned, och arkitektur och möbler skulle vara rationella, ljusa och anpassade till det moderna livet.'
     },
     {
