@@ -36,7 +36,7 @@
     #app {
       position: relative;
       width: 100vw;
-      height: 100vh;
+       height: 100dvh;
       overflow: hidden;
       background: linear-gradient(to left, rgba(255,255,255,0.05), transparent 90%), #111111;
     }
@@ -191,7 +191,7 @@
   #layerToggle {
   position: absolute;
   left: 14px;
-  bottom: 14px;
+   bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   padding: 10px 14px;
   background: rgba(12,12,16,0.88);
   border: 1px solid var(--panel-border);
@@ -211,7 +211,7 @@
 #layerPanel {
   position: absolute;
   left: 14px;
-  bottom: 58px; /* sits above the button */
+  bottom: calc(58px + env(safe-area-inset-bottom, 0px));
   min-width: 150px;
   max-width: 280px;
   max-height: 70vh;
@@ -351,7 +351,7 @@
 	#helpToggle {
   position: absolute;
   right: 14px;
-  bottom: 14px;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   width: 42px;
   height: 42px;
   padding: 0;
@@ -374,7 +374,7 @@
 #helpPanel {
   position: absolute;
   right: 14px;
-  bottom: 64px; /* sits above the ? button */
+  bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   width: min(260px, calc(100vw - 28px));
   
   overflow: auto;
