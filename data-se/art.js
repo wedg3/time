@@ -63,7 +63,7 @@ window.TimelineRegistry.registerDataset({
   facts: [
     { year: -447, text: '🏛️ Parthenon i Aten blir ett klassiskt exempel på antik arkitektur.', level: 0 },
     { year: 1140, text: '🕍 Tidiga gotiska kyrkor börjar byggas i Frankrike.', level: 1 },
-    { year: 1434, text: '🎨 Renässansens perspektivmåleri får stort genomslag i Italien.', level: 1 },
+    { year: 1434, text: '🎨 Renässansens perspektivmåleri får stort genomslag i Italien.', level: 0 },
     { year: 1504, text: '🗿 Michelangelos David blir ett berömt renässansverk.', level: 2 },
     { year: 1661, text: '👑 Versailles börjar utvecklas till ett huvudverk inom barockens arkitektur och interiör.', level: 1 },
     { year: 1760, text: '🏺 Nyklassicismen växer sig stark i Europa.', level: 1 },
