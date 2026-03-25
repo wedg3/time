@@ -268,6 +268,47 @@
       color: rgba(255,255,255,0.5);
     }
 
+    .layer-category + .layer-category {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0,0,0,0.14);
+    }
+
+    .layer-category-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 6px 4px;
+      background: transparent;
+      border: none;
+      color: rgba(0,0,0,0.92);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .layer-category-header:hover {
+      background: rgba(255,255,255,0.22);
+    }
+
+    .layer-category-arrow {
+      font-size: 12px;
+      width: 14px;
+      text-align: center;
+      flex: 0 0 14px;
+    }
+
+    .layer-category-items {
+      padding-left: 18px;
+      margin-top: 4px;
+    }
+
+    .layer-category-items.hidden {
+      display: none;
+    }
+
     #eraInfoBox {
       position: absolute;
       top: 18px;
@@ -445,7 +486,6 @@
       letter-spacing: 0.04em;
     }
 
-    /* Top-right mini controls */
     #topRightTools {
       position: absolute;
       top: calc(14px + env(safe-area-inset-top, 0px));
@@ -464,14 +504,13 @@
       justify-content: center;
       background: rgba(12,12,16,0.82);
       border: 1px solid var(--panel-border);
-     
       color: rgba(255,255,255,0.92);
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 10px 24px rgba(0,0,0,0.22);
       backdrop-filter: blur(10px);
-      transition: background 0.12s ease, transform 0.12s ease, border-color 0.12s ease;
+      transition: background 0.12s ease, transform 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
     }
 
     .mini-tool-btn:hover {
@@ -482,6 +521,11 @@
     .mini-tool-btn.active {
       border-color: rgba(255,255,255,0.1);
       background: rgba(38,38,50,0.74);
+      opacity: 1;
+    }
+
+    .mini-tool-btn:not(.active) {
+      opacity: 0.72;
     }
 
     .mini-tool-btn svg {
@@ -503,7 +547,9 @@
     <div id="topRightTools">
       <button id="layerNameToggle" class="mini-tool-btn" type="button" aria-label="Show layer names" title="Dölj/Visa temaetiketter">T</button>
 
-     <button id="colorizeLayersBtn" class="mini-tool-btn" type="button" aria-label="Randomize layer colors" title="Färgsätt varje lager med egen färgskala">
+      <button id="factsToggleBtn" class="mini-tool-btn active" type="button" aria-label="Show or hide facts" title="Dölj/Visa fakta">F</button>
+
+      <button id="colorizeLayersBtn" class="mini-tool-btn" type="button" aria-label="Randomize layer colors" title="Färgsätt varje lager med egen färgskala">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M12 3c-4.97 0-9 3.58-9 8 0 2.4 1.23 4.55 3.17 6.02.48.36 1.11.76 1.11 1.45 0 .51-.31.95-.31 1.54 0 1.11.9 1.99 2.01 1.99h1.23c3.18 0 5.79-2.2 5.79-4.9 0-.62-.17-1.19-.17-1.75 0-1.18.81-1.74 1.94-1.74H19c1.66 0 3-1.34 3-3 0-4.42-4.03-8-10-8Z" fill="#f4d35e"/>
           <circle cx="7.5" cy="11" r="1.6" fill="#ff595e"/>
@@ -573,6 +619,7 @@
     const helpPanel = document.getElementById('helpPanel');
 
     const layerNameToggle = document.getElementById('layerNameToggle');
+    const factsToggleBtn = document.getElementById('factsToggleBtn');
     const colorizeLayersBtn = document.getElementById('colorizeLayersBtn');
     const resetLayerColorsBtn = document.getElementById('resetLayerColorsBtn');
 
@@ -598,7 +645,9 @@
     let hoveredEra = null;
 
     let showLayerNamesRight = true;
+    let showFacts = true;
     let datasetHueMap = null;
+    let expandedCategories = {};
 
     const ERA_COLOR_POOL = [
       { bg: 'rgba(255, 99, 99, 0.58)', border: 'rgba(255, 140, 140, 0.88)' },
@@ -731,6 +780,7 @@
         return {
           ...dataset,
           id: datasetId,
+          category: dataset.category || 'Other',
           enabled,
           eras: erasWithDefaults,
           facts: (dataset.facts || []).map((fact, factIndex) => ({
@@ -791,6 +841,13 @@
       render();
     });
 
+    factsToggleBtn.addEventListener('click', event => {
+      event.stopPropagation();
+      showFacts = !showFacts;
+      factsToggleBtn.classList.toggle('active', showFacts);
+      render();
+    });
+
     colorizeLayersBtn.addEventListener('click', event => {
       event.stopPropagation();
       datasetHueMap = createRandomDatasetHueMap();
@@ -813,7 +870,7 @@
       const all = datasets.map(d => d.id);
 
       const startHue = Math.floor(rng() * 360);
-      const step = 137.508; // golden angle for good spread
+      const step = 137.508;
 
       all.forEach((datasetId, index) => {
         let hue = (startHue + index * step + rng() * 28 - 14) % 360;
@@ -851,31 +908,87 @@
 
     function buildLayerPanel() {
       layerList.innerHTML = '';
+
+      const grouped = new Map();
+
       datasets.forEach(dataset => {
-        const row = document.createElement('div');
-        row.className = 'layer-item';
-        const inputId = `layer-${dataset.id}`;
-        row.innerHTML = `
-          <label for="${inputId}">
-            <input id="${inputId}" type="checkbox" ${dataset.enabled ? 'checked' : ''} />
-            <span>${dataset.label}</span>
-          </label>
-        `;
-        const checkbox = row.querySelector('input');
-        checkbox.addEventListener('change', () => {
-          dataset.enabled = checkbox.checked;
-          if (activeEraId) {
-            const allEras = datasets.flatMap(d => d.enabled ? d.eras : []);
-            if (!allEras.some(era => era.id === activeEraId)) {
-              activeEraId = null;
-              activeEra = null;
-            } else {
-              activeEra = allEras.find(era => era.id === activeEraId) || null;
-            }
-          }
-          render();
+        const category = dataset.category || 'Other';
+        if (!grouped.has(category)) grouped.set(category, []);
+        grouped.get(category).push(dataset);
+      });
+
+      const preferredOrder = ['Core', 'Geology', 'History', 'Nations', 'Arts', 'Science', 'Other'];
+
+      const sortedCategories = [...grouped.keys()].sort((a, b) => {
+        const ai = preferredOrder.indexOf(a);
+        const bi = preferredOrder.indexOf(b);
+        if (ai === -1 && bi === -1) return a.localeCompare(b);
+        if (ai === -1) return 1;
+        if (bi === -1) return -1;
+        return ai - bi;
+      });
+
+      sortedCategories.forEach(categoryName => {
+        const datasetsInCategory = grouped.get(categoryName).slice().sort((a, b) => {
+          return (a.label || a.id).localeCompare(b.label || b.id);
         });
-        layerList.appendChild(row);
+
+        if (!(categoryName in expandedCategories)) {
+          expandedCategories[categoryName] = true;
+        }
+
+        const group = document.createElement('div');
+        group.className = 'layer-category';
+
+        const header = document.createElement('button');
+        header.type = 'button';
+        header.className = 'layer-category-header';
+        header.innerHTML = `
+          <span class="layer-category-arrow">${expandedCategories[categoryName] ? '▾' : '▸'}</span>
+          <span>${categoryName}</span>
+        `;
+
+        const items = document.createElement('div');
+        items.className = `layer-category-items${expandedCategories[categoryName] ? '' : ' hidden'}`;
+
+        header.addEventListener('click', () => {
+          expandedCategories[categoryName] = !expandedCategories[categoryName];
+          buildLayerPanel();
+        });
+
+        datasetsInCategory.forEach(dataset => {
+          const row = document.createElement('div');
+          row.className = 'layer-item';
+          const inputId = `layer-${dataset.id}`;
+
+          row.innerHTML = `
+            <label for="${inputId}">
+              <input id="${inputId}" type="checkbox" ${dataset.enabled ? 'checked' : ''} />
+              <span>${dataset.label}</span>
+            </label>
+          `;
+
+          const checkbox = row.querySelector('input');
+          checkbox.addEventListener('change', () => {
+            dataset.enabled = checkbox.checked;
+            if (activeEraId) {
+              const allEras = datasets.flatMap(d => d.enabled ? d.eras : []);
+              if (!allEras.some(era => era.id === activeEraId)) {
+                activeEraId = null;
+                activeEra = null;
+              } else {
+                activeEra = allEras.find(era => era.id === activeEraId) || null;
+              }
+            }
+            render();
+          });
+
+          items.appendChild(row);
+        });
+
+        group.appendChild(header);
+        group.appendChild(items);
+        layerList.appendChild(group);
       });
     }
 
@@ -951,118 +1064,118 @@
         .filter(era => pxPerYear >= (era.revealZoom || 0));
     }
 
- function addEras() {
-  const enabled = getEnabledDatasets();
-  const ordered = enabled.map((dataset, datasetIndex) => ({
-    dataset,
-    datasetIndex,
-    eras: dataset.eras.filter(era => pxPerYear >= (era.revealZoom || 0))
-  }));
+    function addEras() {
+      const enabled = getEnabledDatasets();
+      const ordered = enabled.map((dataset, datasetIndex) => ({
+        dataset,
+        datasetIndex,
+        eras: dataset.eras.filter(era => pxPerYear >= (era.revealZoom || 0))
+      }));
 
-  const majorDatasetId = 'major';
-  const layerDatasets = [
-    ...ordered.filter(item => item.dataset.id === majorDatasetId),
-    ...ordered.filter(item => item.dataset.id !== majorDatasetId)
-  ];
+      const majorDatasetId = 'major';
+      const layerDatasets = [
+        ...ordered.filter(item => item.dataset.id === majorDatasetId),
+        ...ordered.filter(item => item.dataset.id !== majorDatasetId)
+      ];
 
-  const baseTop = window.innerHeight / 2 - 50;
-  const rowGap = 10;
-  const rowMap = new Map();
-  let nextRow = 0;
+      const baseTop = window.innerHeight / 2 - 50;
+      const rowGap = 10;
+      const rowMap = new Map();
+      let nextRow = 0;
 
-  const rowLabelData = new Map();
+      const rowLabelData = new Map();
 
-  layerDatasets.forEach(item => {
-    item.eras
-      .sort((a, b) => (a.order - b.order) || (a.start - b.start))
-      .forEach(era => {
-        const rowKey = `${item.dataset.id}:${era.order || 0}`;
-        if (!rowMap.has(rowKey)) {
-          rowMap.set(rowKey, nextRow++);
-        }
+      layerDatasets.forEach(item => {
+        item.eras
+          .sort((a, b) => (a.order - b.order) || (a.start - b.start))
+          .forEach(era => {
+            const rowKey = `${item.dataset.id}:${era.order || 0}`;
+            if (!rowMap.has(rowKey)) {
+              rowMap.set(rowKey, nextRow++);
+            }
 
-        const visualRow = rowMap.get(rowKey);
-        const rawX1 = yearToX(era.start);
-        const rawX2 = yearToX(era.end);
-        if (rawX2 < 0 || rawX1 > window.innerWidth) return;
+            const visualRow = rowMap.get(rowKey);
+            const rawX1 = yearToX(era.start);
+            const rawX2 = yearToX(era.end);
+            if (rawX2 < 0 || rawX1 > window.innerWidth) return;
 
-        const x1 = Math.max(0, rawX1);
-        const x2 = Math.min(window.innerWidth, rawX2);
-        const width = x2 - x1;
-        if (width < 2) return;
+            const x1 = Math.max(0, rawX1);
+            const x2 = Math.min(window.innerWidth, rawX2);
+            const width = x2 - x1;
+            if (width < 2) return;
 
-        const bandTop = baseTop - visualRow * (era.rowHeight + rowGap);
-        const displayColor = getEraDisplayColor(era);
+            const bandTop = baseTop - visualRow * (era.rowHeight + rowGap);
+            const displayColor = getEraDisplayColor(era);
 
-        const band = document.createElement('button');
-        band.type = 'button';
-        band.className = `era-band${activeEraId === era.id ? ' active' : ''}`;
-        band.style.left = `${x1}px`;
-        band.style.width = `${width}px`;
-        band.style.top = `${bandTop}px`;
-        band.style.height = `${era.rowHeight}px`;
-        band.style.background = displayColor.bg;
-        band.style.borderColor = displayColor.border;
-        band.style.opacity = `${era.opacity ?? 1}`;
-        band.dataset.eraId = era.id;
-        band.title = era.title;
+            const band = document.createElement('button');
+            band.type = 'button';
+            band.className = `era-band${activeEraId === era.id ? ' active' : ''}`;
+            band.style.left = `${x1}px`;
+            band.style.width = `${width}px`;
+            band.style.top = `${bandTop}px`;
+            band.style.height = `${era.rowHeight}px`;
+            band.style.background = displayColor.bg;
+            band.style.borderColor = displayColor.border;
+            band.style.opacity = `${era.opacity ?? 1}`;
+            band.dataset.eraId = era.id;
+            band.title = era.title;
 
-        band.addEventListener('click', event => {
-          event.stopPropagation();
-          const willActivate = activeEraId !== era.id;
-          activeEraId = willActivate ? era.id : null;
-          activeEra = willActivate ? era : null;
-          if (willActivate) centerOnRange(era.start, era.end);
-          render();
-        });
-
-        if (width > (era.labelMinWidth || 62)) {
-          const label = document.createElement('div');
-          label.className = 'era-label';
-          label.textContent = era.title;
-          band.appendChild(label);
-        }
-
-        band.addEventListener('mouseenter', () => {
-          hoveredEra = era;
-          updateEraInfo();
-        });
-
-        band.addEventListener('mouseleave', () => {
-          if (hoveredEra && hoveredEra.id === era.id) {
-            hoveredEra = null;
-            updateEraInfo();
-          }
-        });
-
-        layer.appendChild(band);
-
-        if (showLayerNamesRight) {
-          const existing = rowLabelData.get(rowKey);
-          if (!existing || x2 > existing.rightX) {
-            rowLabelData.set(rowKey, {
-              rightX: x2,
-              top: bandTop,
-              height: era.rowHeight,
-              text: item.dataset.label || item.dataset.id
+            band.addEventListener('click', event => {
+              event.stopPropagation();
+              const willActivate = activeEraId !== era.id;
+              activeEraId = willActivate ? era.id : null;
+              activeEra = willActivate ? era : null;
+              if (willActivate) centerOnRange(era.start, era.end);
+              render();
             });
-          }
-        }
-      });
-  });
 
-  if (showLayerNamesRight) {
-    for (const row of rowLabelData.values()) {
-      const sideLabel = document.createElement('div');
-      sideLabel.className = 'era-side-label';
-      sideLabel.style.left = `${Math.min(window.innerWidth - 6, row.rightX + 6)}px`;
-      sideLabel.style.top = `${row.top}px`;
-      sideLabel.style.height = `${row.height}px`;
-      sideLabel.textContent = row.text;
-      layer.appendChild(sideLabel);
+            if (width > (era.labelMinWidth || 62)) {
+              const label = document.createElement('div');
+              label.className = 'era-label';
+              label.textContent = era.title;
+              band.appendChild(label);
+            }
+
+            band.addEventListener('mouseenter', () => {
+              hoveredEra = era;
+              updateEraInfo();
+            });
+
+            band.addEventListener('mouseleave', () => {
+              if (hoveredEra && hoveredEra.id === era.id) {
+                hoveredEra = null;
+                updateEraInfo();
+              }
+            });
+
+            layer.appendChild(band);
+
+            if (showLayerNamesRight) {
+              const existing = rowLabelData.get(rowKey);
+              if (!existing || x2 > existing.rightX) {
+                rowLabelData.set(rowKey, {
+                  rightX: x2,
+                  top: bandTop,
+                  height: era.rowHeight,
+                  text: item.dataset.label || item.dataset.id
+                });
+              }
+            }
+          });
+      });
+
+      if (showLayerNamesRight) {
+        for (const row of rowLabelData.values()) {
+          const sideLabel = document.createElement('div');
+          sideLabel.className = 'era-side-label';
+          sideLabel.style.left = `${Math.min(window.innerWidth - 6, row.rightX + 6)}px`;
+          sideLabel.style.top = `${row.top}px`;
+          sideLabel.style.height = `${row.height}px`;
+          sideLabel.textContent = row.text;
+          layer.appendChild(sideLabel);
+        }
+      }
     }
-  }
-}
 
     function factBelongsToActiveEra(fact) {
       if (!activeEra) return false;
@@ -1070,6 +1183,8 @@
     }
 
     function getVisibleFacts() {
+      if (!showFacts) return [];
+
       const maxZoomLevel = visibleFactLevel();
       return getEnabledDatasets()
         .flatMap(dataset => dataset.facts)
