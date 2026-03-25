@@ -1,6 +1,7 @@
 window.TimelineRegistry.registerDataset({
   id: 'art-design',
   label: 'Konst & Design',
+   category: 'Konst & Kultur',
   enabledByDefault: false,
   eras: [
     {
