@@ -1,6 +1,7 @@
 window.TimelineRegistry.registerDataset({
   id: 'romarriket',
   label: 'Romarriket',
+    category: 'Civilisationer',
   enabledByDefault: false,
   eras: [
     {
