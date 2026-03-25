@@ -198,7 +198,7 @@
       position: absolute;
       left: 14px;
       bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-      padding: 10px 14px;
+      padding: 8px 10px;
       background: rgba(12,12,16,0.88);
       border: 1px solid var(--panel-border);
       border-radius: 2px;
@@ -220,9 +220,9 @@
       bottom: calc(58px + env(safe-area-inset-bottom, 0px));
       min-width: 150px;
       max-width: 280px;
-      max-height: 70vh;
+      max-height: 80vh;
       overflow: auto;
-      padding: 4px 6px;
+      padding: 6px 8px;
       background: rgba(200,200,200,0.8);
       border: 1px solid var(--panel-border);
       border-radius: 2px;
@@ -269,24 +269,31 @@
     }
 
     .layer-category + .layer-category {
-      margin-top: 10px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(0,0,0,0.14);
+      margin-top: 2px;
+      padding-top: 2px;
+   
+	  
     }
 
     .layer-category-header {
       display: flex;
       align-items: center;
-      gap: 8px;
+	  gap: 2px;
       width: 100%;
-      padding: 6px 4px;
+      padding: 3px 2px;
       background: transparent;
       border: none;
       color: rgba(0,0,0,0.92);
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
       text-align: left;
+	
+	 letter-spacing:0.5px;
+	    border-top: 1px solid rgba(0,0,0,0.14);
+	
+	  
+	  
     }
 
     .layer-category-header:hover {
@@ -297,12 +304,13 @@
       font-size: 12px;
       width: 14px;
       text-align: center;
-      flex: 0 0 14px;
+      flex: 0 0 5px;
     }
 
     .layer-category-items {
       padding-left: 18px;
-      margin-top: 4px;
+      margin-top: 2px;
+
     }
 
     .layer-category-items.hidden {
@@ -388,14 +396,14 @@
       position: absolute;
       right: 14px;
       bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-      width: 35px;
-      height: 35px;
+      width: 30px;
+      height: 30px;
       padding: 0;
       background: rgba(12,12,16,0.88);
       border: 1px solid var(--panel-border);
-      border-radius: 999px;
+      border-radius: 2px;
       color: rgba(255,255,255,0.92);
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 10px 24px rgba(0,0,0,0.28);
@@ -491,8 +499,8 @@
       top: calc(14px + env(safe-area-inset-top, 0px));
       right: 14px;
       display: grid;
-      grid-template-columns: repeat(2, 28px);
-      grid-template-rows: repeat(2, 28px);
+      grid-template-columns: repeat(2, 24px);
+      grid-template-rows: repeat(2, 24px);
       gap: 8px;
       z-index: 24;
     }
@@ -506,28 +514,26 @@
       justify-content: center;
       background: rgba(12,12,16,0.82);
       border: 1px solid var(--panel-border);
-      color: rgba(255,255,255,0.92);
+      color: rgba(155,155,155,0.92);
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.22);
-      backdrop-filter: blur(10px);
-      transition: background 0.12s ease, transform 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+     
+     
     }
 
     .mini-tool-btn:hover {
       background: rgba(20,20,28,0.92);
       transform: translateY(-1px);
+	  color: rgba(255,255,255,0.72);
     }
 
     .mini-tool-btn.active {
-      border-color: rgba(255,255,255,0.1);
-      background: rgba(38,38,50,0.74);
-      opacity: 1;
+
     }
 
     .mini-tool-btn:not(.active) {
-      opacity: 0.72;
+
     }
 
     .mini-tool-btn svg {
@@ -547,18 +553,17 @@
     </div>
 
     <div id="topRightTools">
-      <button id="layerNameToggle" class="mini-tool-btn" type="button" aria-label="Show layer names" title="Dölj/Visa temaetiketter">T</button>
+      <button id="layerNameToggle" class="mini-tool-btn " type="button" aria-label="Show layer names" title="Dölj/Visa temaetiketter">T</button>
 
-      <button id="factsToggleBtn" class="mini-tool-btn active" type="button" aria-label="Show or hide facts" title="Dölj/Visa fakta">F</button>
+      <button id="factsToggleBtn" class="mini-tool-btn " type="button" aria-label="Show or hide facts" title="Dölj/Visa fakta">F</button>
 
-      <button id="colorizeLayersBtn" class="mini-tool-btn" type="button" aria-label="Randomize layer colors" title="Färgsätt varje lager med egen färgskala">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 3c-4.97 0-9 3.58-9 8 0 2.4 1.23 4.55 3.17 6.02.48.36 1.11.76 1.11 1.45 0 .51-.31.95-.31 1.54 0 1.11.9 1.99 2.01 1.99h1.23c3.18 0 5.79-2.2 5.79-4.9 0-.62-.17-1.19-.17-1.75 0-1.18.81-1.74 1.94-1.74H19c1.66 0 3-1.34 3-3 0-4.42-4.03-8-10-8Z" fill="#f4d35e"/>
-          <circle cx="7.5" cy="11" r="1.6" fill="#ff595e"/>
-          <circle cx="10.5" cy="8" r="1.6" fill="#1982c4"/>
-          <circle cx="14" cy="11" r="1.6" fill="#6a4c93"/>
-        </svg>
-      </button>
+<button id="colorizeLayersBtn" class="mini-tool-btn" type="button" aria-label="Randomize layer colors" title="Färgsätt varje lager med egen färgskala">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <rect x="4" y="5" width="16" height="3.2" rx="1.6" fill="#ff6b6b"/>
+    <rect x="4" y="10.4" width="16" height="3.2" rx="1.6" fill="#FFFF00"/>
+    <rect x="4" y="15.8" width="16" height="3.2" rx="1.6" fill="#51cf66"/>
+  </svg>
+</button>
 
       <button id="resetLayerColorsBtn" class="mini-tool-btn" type="button" aria-label="Reset colors" title="Återställ ursprungliga färger">↺</button>
     </div>
@@ -582,6 +587,7 @@
         <p><b>Dra med musen</b> åt höger eller vänster för att flytta linjen.</p>
         <p><b>Zooma in</b> och ut med <b>skrollhjul</b> eller genom att dra <b>två fingrar</b> på touchpad uppåt och neråt.</p>
         <p>Det går också att styra med <b>piltangenterna</b>. Höger/vänster för att flytta. Upp/ned för att zooma.</p>
+		<p>Högst upp till höger kan du dölja fakta och etiketter. Du kan använda färgknappen för att skapa separata färgskalor.</p>
       </div>
     </div>
 
@@ -605,7 +611,7 @@
   <script src="./data-se/datasets.js"></script>
   <script>
     const START_YEAR = -13_800_000_000;
-    const END_YEAR = 2026;
+    const END_YEAR = 2500;
 
     const stage = document.getElementById('stage');
     const layer = document.getElementById('timelineLayer');
@@ -960,11 +966,11 @@
     
       if (uncategorized.length && grouped.size) {
         const spacer = document.createElement('div');
-        spacer.style.height = '10px';
+        spacer.style.height = '4px';
         layerList.appendChild(spacer);
       }
     
-      const preferredOrder = ['Core', 'Geology', 'History', 'Nations', 'Arts', 'Science'];
+      const preferredOrder = ['Djuptid', 'Civilisationer', 'Konst & Kultur', 'Vetenskap & Filosofi', 'Annat', 'Science'];
     
       const sortedCategories = [...grouped.keys()].sort((a, b) => {
         const ai = preferredOrder.indexOf(a);
@@ -1093,7 +1099,7 @@
         tick.style.left = `${x}px`;
         layer.appendChild(tick);
 
-        if (isMajor && y >= -13_800_000_000 && y <= 2200) {
+        if (isMajor && y >= -13_800_000_000 && y <= 2500) {
           const label = document.createElement('div');
           label.className = 'tick-label';
           label.style.left = `${x}px`;
