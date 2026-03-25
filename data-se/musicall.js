@@ -1,7 +1,7 @@
 window.TimelineRegistry.registerDataset({
   id: 'western-music',
   label: 'Västerländsk musik',
-  category: 'Arts',
+   category: 'Konst & Kultur',
   enabledByDefault: false,
   eras: [
     {
