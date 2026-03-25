@@ -58,28 +58,6 @@ window.TimelineRegistry.registerDataset({
       labelMinWidth: 72,
       info: '🌙 Romantikens musik lyfter fram känsla, individualitet, dramatik och nationell färg. Orkestern växer, uttrycken blir större och tonsättarnas personliga röst blir viktigare.'
     },
-    {
-      id: 'wm-modernism',
-      start: 1910,
-      end: 1970,
-      title: 'Modernism',
-      order: 0,
-      revealZoom: 0,
-      rowHeight: 24,
-      labelMinWidth: 70,
-      info: '🌀 Modernismen bryter med äldre tonspråk genom nya harmonier, rytmer, klanger och former. Tonsättare experimenterar med musikens byggstenar på ett mer radikalt sätt.'
-    },
-    {
-      id: 'wm-postmodern',
-      start: 1970,
-      end: 2026,
-      title: 'Senmodern / postmodern',
-      order: 0,
-      revealZoom: 0,
-      rowHeight: 24,
-      labelMinWidth: 104,
-      info: '🪞 Under senmodern och postmodern tid blandas äldre och nya uttryck friare. Gränserna mellan stilar blir mindre tydliga, och tonsättare rör sig ofta mellan tradition, experiment och återbruk.'
-    },
 
 {
   id: 'wm-blues-jazz',
@@ -169,17 +147,7 @@ window.TimelineRegistry.registerDataset({
   labelMinWidth: 112,
   info: '🖤 I början av 90-talet får grunge och alternativ rock sitt starkaste genomslag. Soundet är råare, tyngre och mer desillusionerat än 80-talets stora arenapop.'
 },
-{
-  id: 'wm-electronic-90s',
-  start: 1989,
-  end: 2001,
-  title: 'Elektroniskt 90-tal',
-  order: 0,
-  revealZoom: 0,
-  rowHeight: 24,
-  labelMinWidth: 104,
-  info: '💿 House, techno, rave, trance och annan elektronisk musik växer kraftigt från sent 80-tal och når bred peak under 90-talet. DJ:n och producenten blir allt viktigare musikaliska centrumfigurer.'
-},
+
 {
   id: 'wm-teen-pop-rnb',
   start: 1997,
