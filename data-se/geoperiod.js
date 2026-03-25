@@ -1,6 +1,7 @@
 window.TimelineRegistry.registerDataset({
   id: 'geologiska-perioder',
   label: 'Geologiska perioder',
+    category: 'Djuptid',
   enabledByDefault: false,
   eras: [
     {
