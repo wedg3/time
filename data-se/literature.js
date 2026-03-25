@@ -1,6 +1,7 @@
 window.TimelineRegistry.registerDataset({
   id: 'literature',
   label: 'Litterära epoker',
+   category: 'Konst & Kultur',
   enabledByDefault: false,
   eras: [
     {
