@@ -8,6 +8,7 @@ window.TIMELINE_DATASET_FILES = [
     'sweden.js',
 	  'literature.js',
 	'art.js',
+	'musicall.js',
 	
 'physics.js',
 
