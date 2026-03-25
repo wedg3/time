@@ -1,6 +1,7 @@
 window.TimelineRegistry.registerDataset({
   id: 'kina',
   label: 'Kina',
+    category: 'Civilisationer',
   enabledByDefault: false,
   eras: [
     {
