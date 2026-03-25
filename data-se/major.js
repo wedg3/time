@@ -5,7 +5,7 @@ window.TimelineRegistry.registerDataset({
   eras: [
     {
       start: -4600000000, end: -3000000, title: 'Geologisk tid', order: 0, revealZoom: 0,
-      info: '🌍 Tiden före de förhistoriska människornas framträdande. Aktivera Geologiska eror för mer detaljrik information.'
+      info: '🌍 Tiden före de förhistoriska människornas framträdande. Aktivera djuptidsteman för mer detaljrik information.'
     },
     {
       start: -3000000, end: -3000, title: 'Förhistoria', order: 0, revealZoom: 0,
