@@ -1,6 +1,7 @@
 window.TimelineRegistry.registerDataset({
   id: 'physics-tech',
   label: 'Fysik & teknik',
+    category: 'Vetenskap & Filosofi',
   enabledByDefault: false,
   eras: [
  {
