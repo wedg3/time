@@ -780,7 +780,7 @@
         return {
           ...dataset,
           id: datasetId,
-          category: dataset.category || 'Other',
+          category: dataset.category ?? null,
           enabled,
           eras: erasWithDefaults,
           facts: (dataset.facts || []).map((fact, factIndex) => ({
@@ -908,17 +908,61 @@
 
     function buildLayerPanel() {
       layerList.innerHTML = '';
-
+    
+      const uncategorized = [];
       const grouped = new Map();
-
+    
       datasets.forEach(dataset => {
-        const category = dataset.category || 'Other';
-        if (!grouped.has(category)) grouped.set(category, []);
-        grouped.get(category).push(dataset);
+        if (!dataset.category) {
+          uncategorized.push(dataset);
+        } else {
+          if (!grouped.has(dataset.category)) grouped.set(dataset.category, []);
+          grouped.get(dataset.category).push(dataset);
+        }
       });
-
-      const preferredOrder = ['Core', 'Geology', 'History', 'Nations', 'Arts', 'Science', 'Other'];
-
+    
+      uncategorized.sort((a, b) => (a.label || a.id).localeCompare(b.label || b.id));
+    
+      uncategorized.forEach(dataset => {
+        const row = document.createElement('div');
+        row.className = 'layer-item';
+    
+        const inputId = `layer-${dataset.id}`;
+        row.innerHTML = `
+          <label for="${inputId}">
+            <input id="${inputId}" type="checkbox" ${dataset.enabled ? 'checked' : ''} />
+            <span>${dataset.label}</span>
+          </label>
+        `;
+    
+        const checkbox = row.querySelector('input');
+        checkbox.addEventListener('change', () => {
+          dataset.enabled = checkbox.checked;
+    
+          if (activeEraId) {
+            const allEras = datasets.flatMap(d => d.enabled ? d.eras : []);
+            if (!allEras.some(era => era.id === activeEraId)) {
+              activeEraId = null;
+              activeEra = null;
+            } else {
+              activeEra = allEras.find(era => era.id === activeEraId) || null;
+            }
+          }
+    
+          render();
+        });
+    
+        layerList.appendChild(row);
+      });
+    
+      if (uncategorized.length && grouped.size) {
+        const spacer = document.createElement('div');
+        spacer.style.height = '10px';
+        layerList.appendChild(spacer);
+      }
+    
+      const preferredOrder = ['Core', 'Geology', 'History', 'Nations', 'Arts', 'Science'];
+    
       const sortedCategories = [...grouped.keys()].sort((a, b) => {
         const ai = preferredOrder.indexOf(a);
         const bi = preferredOrder.indexOf(b);
@@ -927,19 +971,19 @@
         if (bi === -1) return -1;
         return ai - bi;
       });
-
+    
       sortedCategories.forEach(categoryName => {
         const datasetsInCategory = grouped.get(categoryName).slice().sort((a, b) => {
           return (a.label || a.id).localeCompare(b.label || b.id);
         });
-
+    
         if (!(categoryName in expandedCategories)) {
           expandedCategories[categoryName] = true;
         }
-
+    
         const group = document.createElement('div');
         group.className = 'layer-category';
-
+    
         const header = document.createElement('button');
         header.type = 'button';
         header.className = 'layer-category-header';
@@ -947,30 +991,31 @@
           <span class="layer-category-arrow">${expandedCategories[categoryName] ? '▾' : '▸'}</span>
           <span>${categoryName}</span>
         `;
-
+    
         const items = document.createElement('div');
         items.className = `layer-category-items${expandedCategories[categoryName] ? '' : ' hidden'}`;
-
+    
         header.addEventListener('click', () => {
           expandedCategories[categoryName] = !expandedCategories[categoryName];
           buildLayerPanel();
         });
-
+    
         datasetsInCategory.forEach(dataset => {
           const row = document.createElement('div');
           row.className = 'layer-item';
+    
           const inputId = `layer-${dataset.id}`;
-
           row.innerHTML = `
             <label for="${inputId}">
               <input id="${inputId}" type="checkbox" ${dataset.enabled ? 'checked' : ''} />
               <span>${dataset.label}</span>
             </label>
           `;
-
+    
           const checkbox = row.querySelector('input');
           checkbox.addEventListener('change', () => {
             dataset.enabled = checkbox.checked;
+    
             if (activeEraId) {
               const allEras = datasets.flatMap(d => d.enabled ? d.eras : []);
               if (!allEras.some(era => era.id === activeEraId)) {
@@ -980,12 +1025,13 @@
                 activeEra = allEras.find(era => era.id === activeEraId) || null;
               }
             }
+    
             render();
           });
-
+    
           items.appendChild(row);
         });
-
+    
         group.appendChild(header);
         group.appendChild(items);
         layerList.appendChild(group);
