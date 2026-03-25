@@ -1,6 +1,7 @@
 window.TimelineRegistry.registerDataset({
   id: 'antikens-grekland',
   label: 'Antikens Grekland',
+    category: 'Civilisationer',
   enabledByDefault: false,
   eras: [
     {
