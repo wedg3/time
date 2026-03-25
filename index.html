@@ -490,7 +490,9 @@
       position: absolute;
       top: calc(14px + env(safe-area-inset-top, 0px));
       right: 14px;
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(2, 28px);
+      grid-template-rows: repeat(2, 28px);
       gap: 8px;
       z-index: 24;
     }
