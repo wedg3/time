@@ -1,6 +1,7 @@
 window.TimelineRegistry.registerDataset({
   id: 'geologic-eras',
   label: 'Geologiska eror',
+    category: 'Djuptid',
   enabledByDefault: false,
   eras: [
     {
