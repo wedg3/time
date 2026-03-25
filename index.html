@@ -781,6 +781,7 @@
           ...dataset,
           id: datasetId,
           category: dataset.category ?? null,
+          sourceOrder: index,
           enabled,
           eras: erasWithDefaults,
           facts: (dataset.facts || []).map((fact, factIndex) => ({
@@ -921,7 +922,7 @@
         }
       });
     
-      uncategorized.sort((a, b) => (a.label || a.id).localeCompare(b.label || b.id));
+      uncategorized.sort((a, b) => a.sourceOrder - b.sourceOrder);
     
       uncategorized.forEach(dataset => {
         const row = document.createElement('div');
@@ -974,7 +975,7 @@
     
       sortedCategories.forEach(categoryName => {
         const datasetsInCategory = grouped.get(categoryName).slice().sort((a, b) => {
-          return (a.label || a.id).localeCompare(b.label || b.id);
+          return a.sourceOrder - b.sourceOrder;
         });
     
         if (!(categoryName in expandedCategories)) {
