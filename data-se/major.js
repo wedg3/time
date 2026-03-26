@@ -44,7 +44,8 @@ window.TimelineRegistry.registerDataset({
     { year: -13800000000, text: '💥 Big Bang. Så vitt vi vet är detta början på rum och tid. Så vitt vi känner till finns ingenting före detta, inte ens tiden själv.', level: 0 },
     { year: -4540000000, text: '🌍 Jorden bildas när stoft, sten och annat material klumpar ihop sig i det tidiga solsystemet.', level: 0 },
     { year: -2800000, text: '🦴 De äldsta kända fossilen av släktet Homo uppträder i Afrika.', level: 0 },
-
+   { year: -315000, text: '🧍Ungefär vid den här tiden uppträder Homo sapiens (den moderna människan) i Afrika.', level: 0 },
+{ year: -40000, text: '🦴 Neandertalarna dör ut ungefär vid den här tiden.', level: 0 },
     { year: -9500, text: '🌾 Jordbruk börjar utvecklas i vissa regioner.', level: 0 },
     { year: -3200, text: '✍️ Skrift uppstår i Mesopotamien.', level: 0 },
 	{ year: 1450, text: '🖨️ Boktryckarkonsten hjälper idéer att spridas mycket snabbare.', level: 0 },
