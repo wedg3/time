@@ -4,7 +4,7 @@ window.TimelineRegistry.registerDataset({
   enabledByDefault: false,
   eras: [
     {
-      start: -10000, end: -4000, title: 'Neolitikum', order: 0, revealZoom: 0, rowHeight: 26, labelMinWidth: 72,
+      start: -10000, end: -4000, title: 'Neolitikum (yngre stenåldern)', order: 0, revealZoom: 0, rowHeight: 26, labelMinWidth: 72,
       info: '🌾 Neolitikum är den senare delen av förhistorien då jordbruk, domesticering av djur och bofast liv sprids i många regioner. Byar växer och samhällen blir gradvis mer komplexa.'
     },
     {
